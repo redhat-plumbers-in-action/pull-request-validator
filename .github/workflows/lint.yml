@@ -13,33 +13,15 @@ permissions:
   contents: read
 
 jobs:
-  super-linter:
-    name: Super Linter
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Repository checkout
-        uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5
-        with:
-          fetch-depth: 0
-
-      - name: Lint Code Base
-        uses: github/super-linter@ae3c77f45b03c6e02021b04fd62abf51046434a0
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
-          VALIDATE_TYPESCRIPT_STANDARD: false
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   lint:
     name: Linters
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@96f53100ba2a5449eb71d2e6604bbcd94b9449b5
+      - uses: actions/checkout@v3
 
       - name: Use Node.js 18.x
-        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
+        uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: yarn
@@ -55,5 +37,3 @@ jobs:
 
       - name: ESLint
         run: yarn run lint
-
-...

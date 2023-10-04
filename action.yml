@@ -1,19 +1,25 @@
 ---
 
-name: 'Your name here'
+name: Pull Request Validator
+description: GitHub Action that validates if PR complies with provided requirements
 
-description: 'Provide a description here'
-
-author: 'Your name or organization here'
+branding:
+  icon: git-pull-request
+  color: blue
 
 inputs:
-  milliseconds: # change this
+  pr-metadata:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: Pull Request metadata
+  config-path:
+    required: true
+    default: .github/pull-request-validator.yml
+    description: Path to configuration file
+
+  token:
+    required: true
+    description: GitHub TOKEN or PAT
 
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
-
-...
+  using: node20
+  main: dist/index.js
