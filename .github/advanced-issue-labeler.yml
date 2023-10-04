@@ -11,5 +11,3 @@ policy:
 
           - name: RFE 🎁
             keys: ['Feature Request']
-
-...
