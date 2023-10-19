@@ -11,6 +11,7 @@ import {
   reviewsAPIResponseRequestedChanges,
   reviewsAPIResponseApprovedWithRequestedChanges,
   reviewsAPIResponseNoReview,
+  reviewsAPIResponseApprovedByNonMember,
 } from '../fixtures/api/reviews.fixture';
 import {
   statusAPIResponseFailed,
@@ -108,6 +109,11 @@ describe('Pull Request Object', () => {
       reviewsAPIResponseApprovedWithRequestedChanges
     );
     expect(reviewed).toEqual(true);
+
+    reviewed = context.pullRequests.isReviewed(
+      reviewsAPIResponseApprovedByNonMember
+    );
+    expect(reviewed).toEqual(true);
   });
 
   test.todo('isMemberReviewed()');
@@ -135,7 +141,47 @@ describe('Pull Request Object', () => {
       reviewsAPIResponseApprovedWithRequestedChanges
     );
     expect(approved).toEqual(true);
+
+    approved = context.pullRequests.isApproved(
+      reviewsAPIResponseApprovedByNonMember
+    );
+    expect(approved).toEqual(false);
   });
 
-  test.todo('isMemberApproved()');
+  test<PullRequestTestContext>('isMemberApproved()', context => {
+    let approved = context.pullRequests.isMemberApproved(
+      reviewsAPIResponseApproved1
+    );
+    expect(approved).toEqual(true);
+
+    approved = context.pullRequests.isMemberApproved(
+      reviewsAPIResponseApproved2
+    );
+    expect(approved).toEqual(true);
+
+    approved = context.pullRequests.isMemberApproved(
+      reviewsAPIResponseReviewed
+    );
+    expect(approved).toEqual(false);
+
+    approved = context.pullRequests.isMemberApproved(
+      reviewsAPIResponseNoReview
+    );
+    expect(approved).toEqual(false);
+
+    approved = context.pullRequests.isMemberApproved(
+      reviewsAPIResponseRequestedChanges
+    );
+    expect(approved).toEqual(false);
+
+    approved = context.pullRequests.isMemberApproved(
+      reviewsAPIResponseApprovedWithRequestedChanges
+    );
+    expect(approved).toEqual(true);
+
+    approved = context.pullRequests.isMemberApproved(
+      reviewsAPIResponseApprovedByNonMember
+    );
+    expect(approved).toEqual(false);
+  });
 });
