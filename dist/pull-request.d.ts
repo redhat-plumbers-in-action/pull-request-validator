@@ -17,8 +17,8 @@ export declare class PullRequest {
     }>;
     getCheckRuns(): Promise<CheckRuns>;
     getStatus(): Promise<Status>;
-    isSuccess(results: CheckRuns['check_runs']): boolean;
-    isFailedOrPending(results: CheckRuns['check_runs']): {
+    isSuccess(results: CheckRuns): boolean;
+    isFailedOrPending(results: CheckRuns): {
         failed: string[];
         pending: string[];
     };

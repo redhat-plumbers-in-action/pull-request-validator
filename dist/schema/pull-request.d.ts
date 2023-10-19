@@ -57,41 +57,22 @@ export declare const pullRequestApiSchema: z.ZodObject<{
     mergeable_state: string;
 }>;
 export type PullRequestApi = z.infer<typeof pullRequestApiSchema>;
-export declare const checkRunsSchema: z.ZodObject<{
-    total_count: z.ZodNumber;
-    check_runs: z.ZodArray<z.ZodObject<{
-        id: z.ZodNumber;
-        name: z.ZodString;
-        status: z.ZodString;
-        conclusion: z.ZodNullable<z.ZodString>;
-    }, "strip", z.ZodTypeAny, {
-        status: string;
-        name: string;
-        conclusion: string | null;
-        id: number;
-    }, {
-        status: string;
-        name: string;
-        conclusion: string | null;
-        id: number;
-    }>, "many">;
+export declare const checkRunsSchema: z.ZodArray<z.ZodObject<{
+    id: z.ZodNumber;
+    name: z.ZodString;
+    status: z.ZodString;
+    conclusion: z.ZodNullable<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    total_count: number;
-    check_runs: {
-        status: string;
-        name: string;
-        conclusion: string | null;
-        id: number;
-    }[];
+    status: string;
+    name: string;
+    conclusion: string | null;
+    id: number;
 }, {
-    total_count: number;
-    check_runs: {
-        status: string;
-        name: string;
-        conclusion: string | null;
-        id: number;
-    }[];
-}>;
+    status: string;
+    name: string;
+    conclusion: string | null;
+    id: number;
+}>, "many">;
 export type CheckRuns = z.infer<typeof checkRunsSchema>;
 export declare const statusSchema: z.ZodObject<{
     state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">]>;
@@ -99,31 +80,31 @@ export declare const statusSchema: z.ZodObject<{
     statuses: z.ZodArray<z.ZodObject<{
         state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">]>;
         context: z.ZodString;
-        description: z.ZodString;
+        description: z.ZodNullable<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         state: "failure" | "success" | "pending";
         context: string;
-        description: string;
+        description: string | null;
     }, {
         state: "failure" | "success" | "pending";
         context: string;
-        description: string;
+        description: string | null;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
-    total_count: number;
     state: "failure" | "success" | "pending";
+    total_count: number;
     statuses: {
         state: "failure" | "success" | "pending";
         context: string;
-        description: string;
+        description: string | null;
     }[];
 }, {
-    total_count: number;
     state: "failure" | "success" | "pending";
+    total_count: number;
     statuses: {
         state: "failure" | "success" | "pending";
         context: string;
-        description: string;
+        description: string | null;
     }[];
 }>;
 export type Status = z.infer<typeof statusSchema>;

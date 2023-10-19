@@ -59,23 +59,21 @@ export class PullRequest {
   async isCIGreen(
     ignoredChecks: IgnoreChecks
   ): Promise<{ result: boolean; message: string }> {
-    const checkRuns = await this.getCheckRuns();
+    let checkRuns = await this.getCheckRuns();
     const status = await this.getStatus();
     let checkRunsSuccess = false;
     let statusSuccess = false;
     let message = '';
 
-    checkRuns.check_runs = checkRuns.check_runs.filter(
-      check => !ignoredChecks.includes(check.name)
-    );
+    checkRuns = checkRuns.filter(check => !ignoredChecks.includes(check.name));
 
-    debug(`Checking CI status for ${checkRuns.total_count} check runs`);
-    if (this.isSuccess(checkRuns.check_runs)) {
+    debug(`Checking CI status for ${checkRuns.length} check runs`);
+    if (this.isSuccess(checkRuns)) {
       debug(`All check runs finished successfully`);
       checkRunsSuccess = true;
     } else {
       checkRunsSuccess = false;
-      const failedChecks = this.isFailedOrPending(checkRuns.check_runs);
+      const failedChecks = this.isFailedOrPending(checkRuns);
       message += `Failed or pending checks - ${failedChecks.failed.concat(
         failedChecks.pending
       )}`;
@@ -84,6 +82,9 @@ export class PullRequest {
     debug(`Checking CI status for ${status.total_count} statuses`);
     if (status.state === 'success') {
       debug(`All Statuses finished successfully`);
+      statusSuccess = true;
+    } else if (status.total_count === 0) {
+      debug(`No Statuses found`);
       statusSuccess = true;
     } else {
       statusSuccess = false;
@@ -111,8 +112,10 @@ export class PullRequest {
     return checkRunsSchema.parse(data);
   }
 
+  //! NOTICE: This works only for commits with less than 100 statuses
+  //! When using pagination from octokit, we lose access to the total_count and overall state
   async getStatus(): Promise<Status> {
-    const data = await this.octokit.paginate(
+    const { data } = await this.octokit.request(
       'GET /repos/{owner}/{repo}/commits/{ref}/status',
       {
         owner: this.owner,
@@ -125,13 +128,13 @@ export class PullRequest {
     return statusSchema.parse(data);
   }
 
-  isSuccess(results: CheckRuns['check_runs']): boolean {
+  isSuccess(results: CheckRuns): boolean {
     return results.every(
       item => item.conclusion === 'success' && item.status === 'completed'
     );
   }
 
-  isFailedOrPending(results: CheckRuns['check_runs']): {
+  isFailedOrPending(results: CheckRuns): {
     failed: string[];
     pending: string[];
   } {
