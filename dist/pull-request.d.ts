@@ -1,5 +1,5 @@
 import { CustomOctokit } from './octokit';
-import { CheckRuns, CheckSuites, PullRequestApi, Reviews } from './schema/pull-request';
+import { CheckRuns, PullRequestApi, Reviews } from './schema/pull-request';
 import { IgnoreChecks } from './schema/config';
 export declare class PullRequest {
     readonly number: number;
@@ -16,8 +16,7 @@ export declare class PullRequest {
         message: string;
     }>;
     getCheckRuns(): Promise<CheckRuns>;
-    getCheckSuites(): Promise<CheckSuites>;
-    isSuccess(results: CheckRuns['check_runs'] | CheckSuites['check_suites']): boolean;
+    isSuccess(results: CheckRuns['check_runs']): boolean;
     isFailedOrMissing(results: CheckRuns['check_runs']): {
         failed: string[];
         missing: string[];
