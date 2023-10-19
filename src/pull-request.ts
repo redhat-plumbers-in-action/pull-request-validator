@@ -69,9 +69,9 @@ export class PullRequest {
       check => !ignoredChecks.includes(check.name)
     );
 
-    notice(`🔍 Checking CI status for ${checkRuns.total_count} check runs`);
+    debug(`Checking CI status for ${checkRuns.total_count} check runs`);
     if (this.isSuccess(checkRuns.check_runs)) {
-      debug(`🔍 Check runs status is success`);
+      debug(`All check runs finished successfully`);
       checkRunsSuccess = true;
     } else {
       checkRunsSuccess = false;
@@ -81,9 +81,9 @@ export class PullRequest {
       )}`;
     }
 
-    notice(`🔍 Checking CI status for ${status.total_count} statuses`);
+    debug(`Checking CI status for ${status.total_count} statuses`);
     if (status.state === 'success') {
-      debug(`🔍 Status is success`);
+      debug(`All Statuses finished successfully`);
       statusSuccess = true;
     } else {
       statusSuccess = false;
@@ -177,11 +177,11 @@ export class PullRequest {
 
   isReviewed(reviews: Reviews): boolean {
     if (this.isMemberReviewed(reviews)) {
-      notice(`🔍 Member has reviewed the PR`);
+      debug('Member has reviewed the PR');
       return true;
     }
 
-    debug(`🔍 Member has not reviewed the PR`);
+    debug('Member has not reviewed the PR');
     return false;
   }
 
@@ -218,11 +218,11 @@ export class PullRequest {
 
   isApproved(reviews: Reviews): boolean {
     if (this.isMemberApproved(reviews)) {
-      notice(`🔍 Member has approved the PR`);
+      debug('Member has approved the PR');
       return true;
     }
 
-    notice(`🔍 Member has not approved the PR`);
+    debug('Member has not approved the PR');
     return false;
   }
 
@@ -232,7 +232,7 @@ export class PullRequest {
 
     memberReviews.forEach((review, login) => {
       if (review.state === 'APPROVED') {
-        notice(`🔍 Member ${login} has approved the PR`);
+        notice(`🕵️ Member '${login}' has approved the PR`);
         approved = true;
       }
     });

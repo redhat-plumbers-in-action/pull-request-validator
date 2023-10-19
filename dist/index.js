@@ -18902,9 +18902,9 @@ class PullRequest {
         let statusSuccess = false;
         let message = '';
         checkRuns.check_runs = checkRuns.check_runs.filter(check => !ignoredChecks.includes(check.name));
-        (0,core.notice)(`🔍 Checking CI status for ${checkRuns.total_count} check runs`);
+        (0,core.debug)(`Checking CI status for ${checkRuns.total_count} check runs`);
         if (this.isSuccess(checkRuns.check_runs)) {
-            (0,core.debug)(`🔍 Check runs status is success`);
+            (0,core.debug)(`All check runs finished successfully`);
             checkRunsSuccess = true;
         }
         else {
@@ -18912,9 +18912,9 @@ class PullRequest {
             const failedChecks = this.isFailedOrPending(checkRuns.check_runs);
             message += `Failed or pending checks - ${failedChecks.failed.concat(failedChecks.pending)}`;
         }
-        (0,core.notice)(`🔍 Checking CI status for ${status.total_count} statuses`);
+        (0,core.debug)(`Checking CI status for ${status.total_count} statuses`);
         if (status.state === 'success') {
-            (0,core.debug)(`🔍 Status is success`);
+            (0,core.debug)(`All Statuses finished successfully`);
             statusSuccess = true;
         }
         else {
@@ -18975,10 +18975,10 @@ class PullRequest {
     }
     isReviewed(reviews) {
         if (this.isMemberReviewed(reviews)) {
-            (0,core.notice)(`🔍 Member has reviewed the PR`);
+            (0,core.debug)('Member has reviewed the PR');
             return true;
         }
-        (0,core.debug)(`🔍 Member has not reviewed the PR`);
+        (0,core.debug)('Member has not reviewed the PR');
         return false;
     }
     // PR is considered as reviewed if a member has requested changes or approved it
@@ -19005,10 +19005,10 @@ class PullRequest {
     }
     isApproved(reviews) {
         if (this.isMemberApproved(reviews)) {
-            (0,core.notice)(`🔍 Member has approved the PR`);
+            (0,core.debug)('Member has approved the PR');
             return true;
         }
-        (0,core.notice)(`🔍 Member has not approved the PR`);
+        (0,core.debug)('Member has not approved the PR');
         return false;
     }
     isMemberApproved(reviews) {
@@ -19016,7 +19016,7 @@ class PullRequest {
         let approved = false;
         memberReviews.forEach((review, login) => {
             if (review.state === 'APPROVED') {
-                (0,core.notice)(`🔍 Member ${login} has approved the PR`);
+                (0,core.notice)(`🕵️ Member '${login}' has approved the PR`);
                 approved = true;
             }
         });
