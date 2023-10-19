@@ -35,7 +35,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@actions/github": "^5.1.1",
+    "@actions/github": "^6.0.0",
     "@total-typescript/ts-reset": "^0.5.1",
     "@types/node": "^20.8.2",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
