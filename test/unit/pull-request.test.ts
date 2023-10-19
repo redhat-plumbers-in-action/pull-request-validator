@@ -17,6 +17,10 @@ import {
   statusAPIResponseFailedAndPending,
   statusAPIResponseSuccess,
 } from '../fixtures/api/status.fixture';
+import {
+  checkRunsAPIResponseFailed,
+  checkRunsAPIResponseSuccess,
+} from '../fixtures/api/check-runs.fixture';
 
 describe('Pull Request Object', () => {
   beforeEach<PullRequestTestContext>(context => {
@@ -24,20 +28,47 @@ describe('Pull Request Object', () => {
   });
 
   it<PullRequestTestContext>('can be instantiated', context =>
-    context.pullRequests.map(prItem => expect(prItem).toBeDefined()));
+    expect(context.pullRequests).toBeDefined());
 
   test.todo('isCIGreen()');
-  test.todo('isSuccess()');
-  test.todo('isFailedOrPending()');
+  test<PullRequestTestContext>('isSuccess()', context => {
+    let success = context.pullRequests.isSuccess(
+      checkRunsAPIResponseSuccess.check_runs
+    );
+    expect(success).toEqual(true);
+
+    success = context.pullRequests.isSuccess(
+      checkRunsAPIResponseFailed.check_runs
+    );
+    expect(success).toEqual(false);
+  });
+
+  test<PullRequestTestContext>('isFailedOrPending()', context => {
+    let { failed, pending } = context.pullRequests.isFailedOrPending(
+      checkRunsAPIResponseSuccess.check_runs
+    );
+    expect(failed).toEqual([]);
+    expect(pending).toEqual([]);
+
+    ({ failed, pending } = context.pullRequests.isFailedOrPending(
+      checkRunsAPIResponseFailed.check_runs
+    ));
+    expect(failed).toEqual([
+      '`Pull Request Validator[failure]`',
+      '`Tracker Validator[failure]`',
+      '`Tracker Validation[failure]`',
+    ]);
+    expect(pending).toEqual([]);
+  });
 
   test<PullRequestTestContext>('isFailedOrPendingStatuses()', context => {
-    let { failed, pending } = context.pullRequests[0].isFailedOrPendingStatuses(
+    let { failed, pending } = context.pullRequests.isFailedOrPendingStatuses(
       statusAPIResponseSuccess.statuses
     );
     expect(failed).toEqual([]);
     expect(pending).toEqual([]);
 
-    ({ failed, pending } = context.pullRequests[0].isFailedOrPendingStatuses(
+    ({ failed, pending } = context.pullRequests.isFailedOrPendingStatuses(
       statusAPIResponseFailed.statuses
     ));
     expect(failed).toEqual([
@@ -46,7 +77,7 @@ describe('Pull Request Object', () => {
     ]);
     expect(pending).toEqual([]);
 
-    ({ failed, pending } = context.pullRequests[0].isFailedOrPendingStatuses(
+    ({ failed, pending } = context.pullRequests.isFailedOrPendingStatuses(
       statusAPIResponseFailedAndPending.statuses
     ));
     expect(failed).toEqual(['`CentOS CI (CentOS Stream 9)[failure]`']);
@@ -56,26 +87,24 @@ describe('Pull Request Object', () => {
   });
 
   test<PullRequestTestContext>('isReviewed()', context => {
-    let reviewed = context.pullRequests[0].isReviewed(
-      reviewsAPIResponseApproved1
-    );
+    let reviewed = context.pullRequests.isReviewed(reviewsAPIResponseApproved1);
     expect(reviewed).toEqual(true);
 
-    reviewed = context.pullRequests[0].isReviewed(reviewsAPIResponseApproved2);
+    reviewed = context.pullRequests.isReviewed(reviewsAPIResponseApproved2);
     expect(reviewed).toEqual(true);
 
-    reviewed = context.pullRequests[0].isReviewed(reviewsAPIResponseReviewed);
+    reviewed = context.pullRequests.isReviewed(reviewsAPIResponseReviewed);
     expect(reviewed).toEqual(true);
 
-    reviewed = context.pullRequests[0].isReviewed(reviewsAPIResponseNoReview);
+    reviewed = context.pullRequests.isReviewed(reviewsAPIResponseNoReview);
     expect(reviewed).toEqual(false);
 
-    reviewed = context.pullRequests[0].isReviewed(
+    reviewed = context.pullRequests.isReviewed(
       reviewsAPIResponseRequestedChanges
     );
     expect(reviewed).toEqual(true);
 
-    reviewed = context.pullRequests[0].isReviewed(
+    reviewed = context.pullRequests.isReviewed(
       reviewsAPIResponseApprovedWithRequestedChanges
     );
     expect(reviewed).toEqual(true);
@@ -85,26 +114,24 @@ describe('Pull Request Object', () => {
   test.todo('memberReviews()');
 
   test<PullRequestTestContext>('isApproved()', context => {
-    let approved = context.pullRequests[0].isApproved(
-      reviewsAPIResponseApproved1
-    );
+    let approved = context.pullRequests.isApproved(reviewsAPIResponseApproved1);
     expect(approved).toEqual(true);
 
-    approved = context.pullRequests[0].isApproved(reviewsAPIResponseApproved2);
+    approved = context.pullRequests.isApproved(reviewsAPIResponseApproved2);
     expect(approved).toEqual(true);
 
-    approved = context.pullRequests[0].isApproved(reviewsAPIResponseReviewed);
+    approved = context.pullRequests.isApproved(reviewsAPIResponseReviewed);
     expect(approved).toEqual(false);
 
-    approved = context.pullRequests[0].isApproved(reviewsAPIResponseNoReview);
+    approved = context.pullRequests.isApproved(reviewsAPIResponseNoReview);
     expect(approved).toEqual(false);
 
-    approved = context.pullRequests[0].isApproved(
+    approved = context.pullRequests.isApproved(
       reviewsAPIResponseRequestedChanges
     );
     expect(approved).toEqual(false);
 
-    approved = context.pullRequests[0].isApproved(
+    approved = context.pullRequests.isApproved(
       reviewsAPIResponseApprovedWithRequestedChanges
     );
     expect(approved).toEqual(true);
