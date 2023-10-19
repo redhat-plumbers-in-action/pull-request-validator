@@ -25,6 +25,7 @@ Config.defaults = {
         'missing-review': 'pr/missing-review',
         'changes-requested': 'pr/changes-requested',
         'missing-failing-ci': 'pr/failing-ci',
+        'waiving-failing-ci': 'ci-waived',
     },
     'ignore-checks': [
         'Pull Request Validator',

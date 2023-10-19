@@ -18608,6 +18608,7 @@ const configLabelsSchema = lib.z.object({
     'missing-review': lib.z.string().min(1),
     'changes-requested': lib.z.string().min(1),
     'missing-failing-ci': lib.z.string().min(1),
+    'waiving-failing-ci': lib.z.string().min(1),
 });
 const ignoreChecksSchema = lib.z.array(lib.z.string().min(1));
 const configSchema = lib.z.object({
@@ -18643,6 +18644,7 @@ Config.defaults = {
         'missing-review': 'pr/missing-review',
         'changes-requested': 'pr/changes-requested',
         'missing-failing-ci': 'pr/failing-ci',
+        'waiving-failing-ci': 'ci-waived',
     },
     'ignore-checks': [
         'Pull Request Validator',
@@ -18661,8 +18663,9 @@ async function action(octokit, owner, repo, pr) {
     let err = [];
     let labels = { add: [], remove: [] };
     const config = await Config.getConfig(octokit);
+    const isCiWaived = pr.currentLabels.includes(config.labels['waiving-failing-ci']);
     const ciPassed = await pr.isCIGreen(config.ignoreChecks);
-    if (!ciPassed.result) {
+    if (!ciPassed.result && !isCiWaived) {
         labels.add.push(config.labels['missing-failing-ci']);
         err.push(`🔴 ${ciPassed.message}`);
     }
@@ -18670,7 +18673,9 @@ async function action(octokit, owner, repo, pr) {
         if (pr.currentLabels.includes(config.labels['missing-failing-ci'])) {
             (0,util/* removeLabel */.qv)(octokit, owner, repo, pr.number, config.labels['missing-failing-ci']);
         }
-        message.push(`🟢 CI - All checks have passed`);
+        isCiWaived
+            ? message.push(`🟡 CI - Waived`)
+            : message.push(`🟢 CI - All checks have passed`);
     }
     const reviews = await pr.getReviews();
     const reviewed = pr.isReviewed(reviews);
