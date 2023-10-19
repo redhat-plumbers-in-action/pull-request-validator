@@ -93,6 +93,40 @@ export declare const checkRunsSchema: z.ZodObject<{
     }[];
 }>;
 export type CheckRuns = z.infer<typeof checkRunsSchema>;
+export declare const statusSchema: z.ZodObject<{
+    state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">]>;
+    total_count: z.ZodNumber;
+    statuses: z.ZodArray<z.ZodObject<{
+        state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">]>;
+        context: z.ZodString;
+        description: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        state: "failure" | "success" | "pending";
+        context: string;
+        description: string;
+    }, {
+        state: "failure" | "success" | "pending";
+        context: string;
+        description: string;
+    }>, "many">;
+}, "strip", z.ZodTypeAny, {
+    total_count: number;
+    state: "failure" | "success" | "pending";
+    statuses: {
+        state: "failure" | "success" | "pending";
+        context: string;
+        description: string;
+    }[];
+}, {
+    total_count: number;
+    state: "failure" | "success" | "pending";
+    statuses: {
+        state: "failure" | "success" | "pending";
+        context: string;
+        description: string;
+    }[];
+}>;
+export type Status = z.infer<typeof statusSchema>;
 export declare const reviewsSchema: z.ZodArray<z.ZodObject<{
     id: z.ZodNumber;
     user: z.ZodObject<{
@@ -112,22 +146,22 @@ export declare const reviewsSchema: z.ZodArray<z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     author_association: string;
     id: number;
+    state: string;
     user: {
         type: string;
         login: string;
     };
     body: string;
-    state: string;
     submitted_at: string;
 }, {
     author_association: string;
     id: number;
+    state: string;
     user: {
         type: string;
         login: string;
     };
     body: string;
-    state: string;
     submitted_at: string;
 }>, "many">;
 export type Reviews = z.infer<typeof reviewsSchema>;

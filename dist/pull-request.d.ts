@@ -1,5 +1,5 @@
 import { CustomOctokit } from './octokit';
-import { CheckRuns, PullRequestApi, Reviews } from './schema/pull-request';
+import { CheckRuns, PullRequestApi, Reviews, Status } from './schema/pull-request';
 import { IgnoreChecks } from './schema/config';
 export declare class PullRequest {
     readonly number: number;
@@ -16,10 +16,15 @@ export declare class PullRequest {
         message: string;
     }>;
     getCheckRuns(): Promise<CheckRuns>;
+    getStatus(): Promise<Status>;
     isSuccess(results: CheckRuns['check_runs']): boolean;
-    isFailedOrMissing(results: CheckRuns['check_runs']): {
+    isFailedOrPending(results: CheckRuns['check_runs']): {
         failed: string[];
-        missing: string[];
+        pending: string[];
+    };
+    isFailedOrPendingStatuses(results: Status['statuses']): {
+        failed: string[];
+        pending: string[];
     };
     getReviews(): Promise<Reviews>;
     isReviewed(reviews: Reviews): boolean;
