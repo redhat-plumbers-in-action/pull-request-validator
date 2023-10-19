@@ -23,14 +23,6 @@ export const checkRunsSchema = z.object({
         conclusion: z.string().nullable(),
     })),
 });
-export const checkSuitesSchema = z.object({
-    total_count: z.number(),
-    check_suites: z.array(z.object({
-        id: z.number(),
-        status: z.string(),
-        conclusion: z.string().nullable(),
-    })),
-});
 export const reviewsSchema = z.array(z.object({
     id: z.number(),
     user: z.object({

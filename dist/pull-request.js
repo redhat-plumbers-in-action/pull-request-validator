@@ -1,6 +1,6 @@
 import { debug, notice } from '@actions/core';
 import { z } from 'zod';
-import { checkRunsSchema, checkSuitesSchema, pullRequestApiSchema, reviewsSchema, } from './schema/pull-request';
+import { checkRunsSchema, pullRequestApiSchema, reviewsSchema, } from './schema/pull-request';
 export class PullRequest {
     constructor(number, ref, owner, repo, octokit) {
         this.number = number;
@@ -29,9 +29,7 @@ export class PullRequest {
     }
     async isCIGreen(ignoredChecks) {
         const checkRuns = await this.getCheckRuns();
-        const checkSuites = await this.getCheckSuites();
         let checkRunsSuccess = false;
-        let checkSuitesSuccess = false;
         let message = '';
         checkRuns.check_runs = checkRuns.check_runs.filter(check => !ignoredChecks.includes(check.name));
         notice(`🔍 Checking CI status for ${checkRuns.total_count} check runs`);
@@ -44,15 +42,7 @@ export class PullRequest {
             const failedChecks = this.isFailedOrMissing(checkRuns.check_runs);
             message = `Failed or missing checks - ${failedChecks.failed.concat(failedChecks.missing)}`;
         }
-        // notice(`🔍 Checking CI status for ${checkSuites.total_count} check suites`);
-        // if (this.isSuccess(checkSuites.check_suites)) {
-        //   debug(`🔍 Check suites status is success`);
-        //   checkSuitesSuccess = true;
-        // } else {
-        //   debug(`🔍 Check suites status is failed`);
-        //   checkSuitesSuccess = false;
-        // }
-        return { result: checkRunsSuccess /* && checkSuitesSuccess */, message };
+        return { result: checkRunsSuccess, message };
     }
     // Check runs are always associated with the latest commit in the PR
     // !FIXME: This works only for PRs with less than 100 check runs
@@ -64,17 +54,6 @@ export class PullRequest {
             per_page: 100,
         });
         return checkRunsSchema.parse(data);
-    }
-    // Check suites are always associated with the entire PR
-    // !FIXME: This works only for PRs with less than 100 check suites
-    async getCheckSuites() {
-        const { data } = await this.octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites', {
-            owner: this.owner,
-            repo: this.repo,
-            ref: this.ref,
-            per_page: 100,
-        });
-        return checkSuitesSchema.parse(data);
     }
     isSuccess(results) {
         return results.every(item => item.conclusion === 'success' && item.status === 'completed');

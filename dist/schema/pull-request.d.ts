@@ -93,37 +93,6 @@ export declare const checkRunsSchema: z.ZodObject<{
     }[];
 }>;
 export type CheckRuns = z.infer<typeof checkRunsSchema>;
-export declare const checkSuitesSchema: z.ZodObject<{
-    total_count: z.ZodNumber;
-    check_suites: z.ZodArray<z.ZodObject<{
-        id: z.ZodNumber;
-        status: z.ZodString;
-        conclusion: z.ZodNullable<z.ZodString>;
-    }, "strip", z.ZodTypeAny, {
-        status: string;
-        conclusion: string | null;
-        id: number;
-    }, {
-        status: string;
-        conclusion: string | null;
-        id: number;
-    }>, "many">;
-}, "strip", z.ZodTypeAny, {
-    total_count: number;
-    check_suites: {
-        status: string;
-        conclusion: string | null;
-        id: number;
-    }[];
-}, {
-    total_count: number;
-    check_suites: {
-        status: string;
-        conclusion: string | null;
-        id: number;
-    }[];
-}>;
-export type CheckSuites = z.infer<typeof checkSuitesSchema>;
 export declare const reviewsSchema: z.ZodArray<z.ZodObject<{
     id: z.ZodNumber;
     user: z.ZodObject<{
