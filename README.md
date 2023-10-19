@@ -180,6 +180,7 @@ labels:
   missing-review: needs-review
   changes-requested: changes-requested
   missing-failing-ci: needs-ci
+  waiving-failing-ci: ci-waived
 ignore-checks:
   - Bad CI
   - Super Bad CI
@@ -192,6 +193,7 @@ labels:
   missing-review: pr/missing-review
   changes-requested: pr/changes-requested
   missing-failing-ci: pr/failing-ci
+  waiving-failing-ci: ci-waived
 # The following checks are a part of source-git automation toolchain
 # They should be ignored to avoid incorrect CI validation
 ignore-checks:
@@ -221,6 +223,12 @@ The name of the label that will be set when the Pull Request has a CHANGES_REQUE
 The name of the label that will be set when the Pull Request has a failing CI.
 
 * default value: `pr/failing-ci`
+
+#### `waiving-failing-ci` keyword
+
+The name of the label that can be used to waive failing CI.
+
+* default value: `ci-waived`
 
 ### `ignore-checks[]` keyword
 

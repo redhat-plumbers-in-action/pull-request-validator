@@ -4,6 +4,7 @@ export const configLabelsSchema = z.object({
   'missing-review': z.string().min(1),
   'changes-requested': z.string().min(1),
   'missing-failing-ci': z.string().min(1),
+  'waiving-failing-ci': z.string().min(1),
 });
 export type ConfigLabels = z.infer<typeof configLabelsSchema>;
 

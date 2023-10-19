@@ -3,14 +3,17 @@ export declare const configLabelsSchema: z.ZodObject<{
     'missing-review': z.ZodString;
     'changes-requested': z.ZodString;
     'missing-failing-ci': z.ZodString;
+    'waiving-failing-ci': z.ZodString;
 }, "strip", z.ZodTypeAny, {
     'missing-review': string;
     'changes-requested': string;
     'missing-failing-ci': string;
+    'waiving-failing-ci': string;
 }, {
     'missing-review': string;
     'changes-requested': string;
     'missing-failing-ci': string;
+    'waiving-failing-ci': string;
 }>;
 export type ConfigLabels = z.infer<typeof configLabelsSchema>;
 export declare const ignoreChecksSchema: z.ZodArray<z.ZodString, "many">;
@@ -20,14 +23,17 @@ export declare const configSchema: z.ZodObject<{
         'missing-review': z.ZodString;
         'changes-requested': z.ZodString;
         'missing-failing-ci': z.ZodString;
+        'waiving-failing-ci': z.ZodString;
     }, "strip", z.ZodTypeAny, {
         'missing-review': string;
         'changes-requested': string;
         'missing-failing-ci': string;
+        'waiving-failing-ci': string;
     }, {
         'missing-review': string;
         'changes-requested': string;
         'missing-failing-ci': string;
+        'waiving-failing-ci': string;
     }>;
     'ignore-checks': z.ZodArray<z.ZodString, "many">;
 }, "strip", z.ZodTypeAny, {
@@ -35,6 +41,7 @@ export declare const configSchema: z.ZodObject<{
         'missing-review': string;
         'changes-requested': string;
         'missing-failing-ci': string;
+        'waiving-failing-ci': string;
     };
     'ignore-checks': string[];
 }, {
@@ -42,6 +49,7 @@ export declare const configSchema: z.ZodObject<{
         'missing-review': string;
         'changes-requested': string;
         'missing-failing-ci': string;
+        'waiving-failing-ci': string;
     };
     'ignore-checks': string[];
 }>;

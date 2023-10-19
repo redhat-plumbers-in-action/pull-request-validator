@@ -11,6 +11,7 @@ export const configContextFixture: ConfigTestContext = {
         'missing-review': 'needs-review',
         'changes-requested': 'changes-requested',
         'missing-failing-ci': 'needs-ci',
+        'waiving-failing-ci': 'ci-waived',
       },
       'ignore-checks': ['Bad CI', 'Super Bad CI'],
     }),

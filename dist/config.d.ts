@@ -6,6 +6,7 @@ export declare class Config {
             'missing-review': string;
             'changes-requested': string;
             'missing-failing-ci': string;
+            'waiving-failing-ci': string;
         };
         'ignore-checks': string[];
     };

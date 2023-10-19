@@ -21,8 +21,11 @@ async function action(
 
   const config = await Config.getConfig(octokit);
 
+  const isCiWaived = pr.currentLabels.includes(
+    config.labels['waiving-failing-ci']
+  );
   const ciPassed = await pr.isCIGreen(config.ignoreChecks);
-  if (!ciPassed.result) {
+  if (!ciPassed.result && !isCiWaived) {
     labels.add.push(config.labels['missing-failing-ci']);
     err.push(`🔴 ${ciPassed.message}`);
   } else {
@@ -35,7 +38,10 @@ async function action(
         config.labels['missing-failing-ci']
       );
     }
-    message.push(`🟢 CI - All checks have passed`);
+
+    isCiWaived
+      ? message.push(`🟡 CI - Waived`)
+      : message.push(`🟢 CI - All checks have passed`);
   }
 
   const reviews = await pr.getReviews();

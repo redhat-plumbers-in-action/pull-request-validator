@@ -5,8 +5,9 @@ async function action(octokit, owner, repo, pr) {
     let err = [];
     let labels = { add: [], remove: [] };
     const config = await Config.getConfig(octokit);
+    const isCiWaived = pr.currentLabels.includes(config.labels['waiving-failing-ci']);
     const ciPassed = await pr.isCIGreen(config.ignoreChecks);
-    if (!ciPassed.result) {
+    if (!ciPassed.result && !isCiWaived) {
         labels.add.push(config.labels['missing-failing-ci']);
         err.push(`🔴 ${ciPassed.message}`);
     }
@@ -14,7 +15,9 @@ async function action(octokit, owner, repo, pr) {
         if (pr.currentLabels.includes(config.labels['missing-failing-ci'])) {
             removeLabel(octokit, owner, repo, pr.number, config.labels['missing-failing-ci']);
         }
-        message.push(`🟢 CI - All checks have passed`);
+        isCiWaived
+            ? message.push(`🟡 CI - Waived`)
+            : message.push(`🟢 CI - All checks have passed`);
     }
     const reviews = await pr.getReviews();
     const reviewed = pr.isReviewed(reviews);
