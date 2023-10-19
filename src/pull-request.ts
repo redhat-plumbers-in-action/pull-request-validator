@@ -97,9 +97,8 @@ export class PullRequest {
     return { result: checkRunsSuccess && statusSuccess, message };
   }
 
-  // !FIXME: This works only for PRs with less than 100 check runs
   async getCheckRuns(): Promise<CheckRuns> {
-    const { data } = await this.octokit.request(
+    const data = await this.octokit.paginate(
       'GET /repos/{owner}/{repo}/commits/{ref}/check-runs',
       {
         owner: this.owner,
@@ -112,9 +111,8 @@ export class PullRequest {
     return checkRunsSchema.parse(data);
   }
 
-  // !FIXME: This works only for PRs with less than 100 check runs
   async getStatus(): Promise<Status> {
-    const { data } = await this.octokit.request(
+    const data = await this.octokit.paginate(
       'GET /repos/{owner}/{repo}/commits/{ref}/status',
       {
         owner: this.owner,
@@ -164,7 +162,7 @@ export class PullRequest {
   }
 
   async getReviews(): Promise<Reviews> {
-    const { data } = await this.octokit.request(
+    const data = await this.octokit.paginate(
       'GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews',
       {
         owner: this.owner,
@@ -173,6 +171,7 @@ export class PullRequest {
         per_page: 100,
       }
     );
+
     return reviewsSchema.parse(data);
   }
 
