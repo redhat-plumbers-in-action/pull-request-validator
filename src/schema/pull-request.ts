@@ -22,17 +22,14 @@ export const pullRequestApiSchema = z.object({
 
 export type PullRequestApi = z.infer<typeof pullRequestApiSchema>;
 
-export const checkRunsSchema = z.object({
-  total_count: z.number(),
-  check_runs: z.array(
-    z.object({
-      id: z.number(),
-      name: z.string(),
-      status: z.string(),
-      conclusion: z.string().nullable(),
-    })
-  ),
-});
+export const checkRunsSchema = z.array(
+  z.object({
+    id: z.number(),
+    name: z.string(),
+    status: z.string(),
+    conclusion: z.string().nullable(),
+  })
+);
 
 export type CheckRuns = z.infer<typeof checkRunsSchema>;
 
@@ -49,7 +46,7 @@ export const statusSchema = z.object({
     z.object({
       state: stateSchema,
       context: z.string(),
-      description: z.string(),
+      description: z.string().nullable(),
     })
   ),
 });

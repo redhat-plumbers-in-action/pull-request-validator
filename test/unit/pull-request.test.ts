@@ -33,26 +33,22 @@ describe('Pull Request Object', () => {
 
   test.todo('isCIGreen()');
   test<PullRequestTestContext>('isSuccess()', context => {
-    let success = context.pullRequests.isSuccess(
-      checkRunsAPIResponseSuccess.check_runs
-    );
+    let success = context.pullRequests.isSuccess(checkRunsAPIResponseSuccess);
     expect(success).toEqual(true);
 
-    success = context.pullRequests.isSuccess(
-      checkRunsAPIResponseFailed.check_runs
-    );
+    success = context.pullRequests.isSuccess(checkRunsAPIResponseFailed);
     expect(success).toEqual(false);
   });
 
   test<PullRequestTestContext>('isFailedOrPending()', context => {
     let { failed, pending } = context.pullRequests.isFailedOrPending(
-      checkRunsAPIResponseSuccess.check_runs
+      checkRunsAPIResponseSuccess
     );
     expect(failed).toEqual([]);
     expect(pending).toEqual([]);
 
     ({ failed, pending } = context.pullRequests.isFailedOrPending(
-      checkRunsAPIResponseFailed.check_runs
+      checkRunsAPIResponseFailed
     ));
     expect(failed).toEqual([
       '`Pull Request Validator[failure]`',

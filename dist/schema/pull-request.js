@@ -14,15 +14,12 @@ export const pullRequestApiSchema = z.object({
     mergeable: z.boolean(),
     mergeable_state: z.string(),
 });
-export const checkRunsSchema = z.object({
-    total_count: z.number(),
-    check_runs: z.array(z.object({
-        id: z.number(),
-        name: z.string(),
-        status: z.string(),
-        conclusion: z.string().nullable(),
-    })),
-});
+export const checkRunsSchema = z.array(z.object({
+    id: z.number(),
+    name: z.string(),
+    status: z.string(),
+    conclusion: z.string().nullable(),
+}));
 const stateSchema = z.union([
     z.literal('success'),
     z.literal('pending'),
@@ -34,7 +31,7 @@ export const statusSchema = z.object({
     statuses: z.array(z.object({
         state: stateSchema,
         context: z.string(),
-        description: z.string(),
+        description: z.string().nullable(),
     })),
 });
 export const reviewsSchema = z.array(z.object({
