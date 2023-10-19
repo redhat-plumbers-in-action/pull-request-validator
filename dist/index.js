@@ -18441,6 +18441,20 @@ const checkRunsSchema = lib.z.object({
         conclusion: lib.z.string().nullable(),
     })),
 });
+const stateSchema = lib.z.union([
+    lib.z.literal('success'),
+    lib.z.literal('pending'),
+    lib.z.literal('failure'),
+]);
+const statusSchema = lib.z.object({
+    state: stateSchema,
+    total_count: lib.z.number(),
+    statuses: lib.z.array(lib.z.object({
+        state: stateSchema,
+        context: lib.z.string(),
+        description: lib.z.string(),
+    })),
+});
 const reviewsSchema = lib.z.array(lib.z.object({
     id: lib.z.number(),
     user: lib.z.object({
@@ -18484,7 +18498,9 @@ class PullRequest {
     }
     async isCIGreen(ignoredChecks) {
         const checkRuns = await this.getCheckRuns();
+        const status = await this.getStatus();
         let checkRunsSuccess = false;
+        let statusSuccess = false;
         let message = '';
         checkRuns.check_runs = checkRuns.check_runs.filter(check => !ignoredChecks.includes(check.name));
         (0,core.notice)(`🔍 Checking CI status for ${checkRuns.total_count} check runs`);
@@ -18494,12 +18510,22 @@ class PullRequest {
         }
         else {
             checkRunsSuccess = false;
-            const failedChecks = this.isFailedOrMissing(checkRuns.check_runs);
-            message = `Failed or missing checks - ${failedChecks.failed.concat(failedChecks.missing)}`;
+            const failedChecks = this.isFailedOrPending(checkRuns.check_runs);
+            message += `Failed or pending checks - ${failedChecks.failed.concat(failedChecks.pending)}`;
         }
-        return { result: checkRunsSuccess, message };
+        (0,core.notice)(`🔍 Checking CI status for ${status.total_count} statuses`);
+        if (status.state === 'success') {
+            (0,core.debug)(`🔍 Status is success`);
+            statusSuccess = true;
+        }
+        else {
+            statusSuccess = false;
+            const failedStatuses = this.isFailedOrPendingStatuses(status.statuses);
+            message.length > 0 && (message += '\t');
+            message += `Failed or pending statuses - ${failedStatuses.failed.concat(failedStatuses.pending)}`;
+        }
+        return { result: checkRunsSuccess && statusSuccess, message };
     }
-    // Check runs are always associated with the latest commit in the PR
     // !FIXME: This works only for PRs with less than 100 check runs
     async getCheckRuns() {
         const { data } = await this.octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
@@ -18510,17 +18536,36 @@ class PullRequest {
         });
         return checkRunsSchema.parse(data);
     }
+    // !FIXME: This works only for PRs with less than 100 check runs
+    async getStatus() {
+        const { data } = await this.octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/status', {
+            owner: this.owner,
+            repo: this.repo,
+            ref: this.ref,
+            per_page: 100,
+        });
+        return statusSchema.parse(data);
+    }
     isSuccess(results) {
         return results.every(item => item.conclusion === 'success' && item.status === 'completed');
     }
-    isFailedOrMissing(results) {
+    isFailedOrPending(results) {
         const failed = results
             .filter(item => item.conclusion !== 'success' && item.status === 'completed')
             .map(item => `\`${item.name}[${item.conclusion}]\``);
-        const missing = results
+        const pending = results
             .filter(item => item.status !== 'completed')
             .map(item => `\`${item.name}[${item.status}]\``);
-        return { failed, missing };
+        return { failed, pending };
+    }
+    isFailedOrPendingStatuses(results) {
+        const failed = results
+            .filter(item => item.state === 'failure')
+            .map(item => `\`${item.context}[${item.state}]\``);
+        const pending = results
+            .filter(item => item.state === 'pending')
+            .map(item => `\`${item.context}[${item.state}]\``);
+        return { failed, pending };
     }
     async getReviews() {
         const { data } = await this.octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {

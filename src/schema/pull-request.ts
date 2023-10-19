@@ -36,6 +36,26 @@ export const checkRunsSchema = z.object({
 
 export type CheckRuns = z.infer<typeof checkRunsSchema>;
 
+const stateSchema = z.union([
+  z.literal('success'),
+  z.literal('pending'),
+  z.literal('failure'),
+]);
+
+export const statusSchema = z.object({
+  state: stateSchema,
+  total_count: z.number(),
+  statuses: z.array(
+    z.object({
+      state: stateSchema,
+      context: z.string(),
+      description: z.string(),
+    })
+  ),
+});
+
+export type Status = z.infer<typeof statusSchema>;
+
 export const reviewsSchema = z.array(
   z.object({
     id: z.number(),

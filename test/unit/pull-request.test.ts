@@ -12,6 +12,11 @@ import {
   reviewsAPIResponseApprovedWithRequestedChanges,
   reviewsAPIResponseNoReview,
 } from '../fixtures/api/reviews.fixture';
+import {
+  statusAPIResponseFailed,
+  statusAPIResponseFailedAndPending,
+  statusAPIResponseSuccess,
+} from '../fixtures/api/status.fixture';
 
 describe('Pull Request Object', () => {
   beforeEach<PullRequestTestContext>(context => {
@@ -23,7 +28,32 @@ describe('Pull Request Object', () => {
 
   test.todo('isCIGreen()');
   test.todo('isSuccess()');
-  test.todo('isFailedOrMissing()');
+  test.todo('isFailedOrPending()');
+
+  test<PullRequestTestContext>('isFailedOrPendingStatuses()', context => {
+    let { failed, pending } = context.pullRequests[0].isFailedOrPendingStatuses(
+      statusAPIResponseSuccess.statuses
+    );
+    expect(failed).toEqual([]);
+    expect(pending).toEqual([]);
+
+    ({ failed, pending } = context.pullRequests[0].isFailedOrPendingStatuses(
+      statusAPIResponseFailed.statuses
+    ));
+    expect(failed).toEqual([
+      '`CentOS CI (CentOS Stream 9 + sanitizers)[failure]`',
+      '`CentOS CI (CentOS Stream 9)[failure]`',
+    ]);
+    expect(pending).toEqual([]);
+
+    ({ failed, pending } = context.pullRequests[0].isFailedOrPendingStatuses(
+      statusAPIResponseFailedAndPending.statuses
+    ));
+    expect(failed).toEqual(['`CentOS CI (CentOS Stream 9)[failure]`']);
+    expect(pending).toEqual([
+      '`CentOS CI (CentOS Stream 9 + sanitizers)[pending]`',
+    ]);
+  });
 
   test<PullRequestTestContext>('isReviewed()', context => {
     let reviewed = context.pullRequests[0].isReviewed(

@@ -7,9 +7,11 @@ import {
   CheckRuns,
   PullRequestApi,
   Reviews,
+  Status,
   checkRunsSchema,
   pullRequestApiSchema,
   reviewsSchema,
+  statusSchema,
 } from './schema/pull-request';
 import { IgnoreChecks } from './schema/config';
 
@@ -58,7 +60,9 @@ export class PullRequest {
     ignoredChecks: IgnoreChecks
   ): Promise<{ result: boolean; message: string }> {
     const checkRuns = await this.getCheckRuns();
+    const status = await this.getStatus();
     let checkRunsSuccess = false;
+    let statusSuccess = false;
     let message = '';
 
     checkRuns.check_runs = checkRuns.check_runs.filter(
@@ -71,16 +75,28 @@ export class PullRequest {
       checkRunsSuccess = true;
     } else {
       checkRunsSuccess = false;
-      const failedChecks = this.isFailedOrMissing(checkRuns.check_runs);
-      message = `Failed or missing checks - ${failedChecks.failed.concat(
-        failedChecks.missing
+      const failedChecks = this.isFailedOrPending(checkRuns.check_runs);
+      message += `Failed or pending checks - ${failedChecks.failed.concat(
+        failedChecks.pending
       )}`;
     }
 
-    return { result: checkRunsSuccess, message };
+    notice(`🔍 Checking CI status for ${status.total_count} statuses`);
+    if (status.state === 'success') {
+      debug(`🔍 Status is success`);
+      statusSuccess = true;
+    } else {
+      statusSuccess = false;
+      const failedStatuses = this.isFailedOrPendingStatuses(status.statuses);
+      message.length > 0 && (message += '\t');
+      message += `Failed or pending statuses - ${failedStatuses.failed.concat(
+        failedStatuses.pending
+      )}`;
+    }
+
+    return { result: checkRunsSuccess && statusSuccess, message };
   }
 
-  // Check runs are always associated with the latest commit in the PR
   // !FIXME: This works only for PRs with less than 100 check runs
   async getCheckRuns(): Promise<CheckRuns> {
     const { data } = await this.octokit.request(
@@ -96,26 +112,55 @@ export class PullRequest {
     return checkRunsSchema.parse(data);
   }
 
+  // !FIXME: This works only for PRs with less than 100 check runs
+  async getStatus(): Promise<Status> {
+    const { data } = await this.octokit.request(
+      'GET /repos/{owner}/{repo}/commits/{ref}/status',
+      {
+        owner: this.owner,
+        repo: this.repo,
+        ref: this.ref,
+        per_page: 100,
+      }
+    );
+
+    return statusSchema.parse(data);
+  }
+
   isSuccess(results: CheckRuns['check_runs']): boolean {
     return results.every(
       item => item.conclusion === 'success' && item.status === 'completed'
     );
   }
 
-  isFailedOrMissing(results: CheckRuns['check_runs']): {
+  isFailedOrPending(results: CheckRuns['check_runs']): {
     failed: string[];
-    missing: string[];
+    pending: string[];
   } {
     const failed = results
       .filter(
         item => item.conclusion !== 'success' && item.status === 'completed'
       )
       .map(item => `\`${item.name}[${item.conclusion}]\``);
-    const missing = results
+    const pending = results
       .filter(item => item.status !== 'completed')
       .map(item => `\`${item.name}[${item.status}]\``);
 
-    return { failed, missing };
+    return { failed, pending };
+  }
+
+  isFailedOrPendingStatuses(results: Status['statuses']): {
+    failed: string[];
+    pending: string[];
+  } {
+    const failed = results
+      .filter(item => item.state === 'failure')
+      .map(item => `\`${item.context}[${item.state}]\``);
+    const pending = results
+      .filter(item => item.state === 'pending')
+      .map(item => `\`${item.context}[${item.state}]\``);
+
+    return { failed, pending };
   }
 
   async getReviews(): Promise<Reviews> {
