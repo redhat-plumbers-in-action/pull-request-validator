@@ -68,3 +68,11 @@ export const reviewsSchema = z.array(
 );
 
 export type Reviews = z.infer<typeof reviewsSchema>;
+
+export const reviewRequestsSchema = z.array(
+  z.object({
+    login: z.string(),
+  })
+);
+
+export type ReviewRequests = z.infer<typeof reviewRequestsSchema>;

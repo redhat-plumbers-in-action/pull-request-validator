@@ -1,6 +1,7 @@
-import { debug, notice } from '@actions/core';
+import { debug } from '@actions/core';
 import { z } from 'zod';
-import { checkRunsSchema, pullRequestApiSchema, reviewsSchema, statusSchema, } from './schema/pull-request';
+import { checkRunsSchema, pullRequestApiSchema, statusSchema, } from './schema/pull-request';
+import { PullRequestReviews } from './reviews/pull-request-reviews';
 export class PullRequest {
     constructor(number, ref, owner, repo, octokit) {
         this.number = number;
@@ -9,6 +10,7 @@ export class PullRequest {
         this.repo = repo;
         this.octokit = octokit;
         this.currentLabels = [];
+        this.reviews = new PullRequestReviews(number, ref, owner, repo, octokit);
     }
     async getPullRequest() {
         const { data } = await this.octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
@@ -101,64 +103,6 @@ export class PullRequest {
             .filter(item => item.state === 'pending')
             .map(item => `\`${item.context}[${item.state}]\``);
         return { failed, pending };
-    }
-    async getReviews() {
-        const data = await this.octokit.paginate('GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
-            owner: this.owner,
-            repo: this.repo,
-            pull_number: this.number,
-            per_page: 100,
-        });
-        return reviewsSchema.parse(data);
-    }
-    isReviewed(reviews) {
-        if (this.isMemberReviewed(reviews)) {
-            debug('Member has reviewed the PR');
-            return true;
-        }
-        debug('Member has not reviewed the PR');
-        return false;
-    }
-    // PR is considered as reviewed if a member has requested changes or approved it
-    isMemberReviewed(reviews) {
-        const memberReviews = this.memberReviews(reviews);
-        return memberReviews.size > 0;
-    }
-    // Return a map of the latest review for each member
-    // For all members is required visibility to public otherwise the author_association is not available
-    memberReviews(reviews) {
-        const memberReviews = reviews.filter(review => review.state !== 'COMMENTED' &&
-            (review.author_association === 'MEMBER' ||
-                review.author_association === 'OWNER' ||
-                review.author_association === 'COLLABORATOR'));
-        let latestMemberReviews = new Map();
-        for (let review of memberReviews) {
-            let prev = latestMemberReviews.get(review.user.login);
-            if (prev && prev.id > review.id) {
-                continue;
-            }
-            latestMemberReviews.set(review.user.login, review);
-        }
-        return latestMemberReviews;
-    }
-    isApproved(reviews) {
-        if (this.isMemberApproved(reviews)) {
-            debug('Member has approved the PR');
-            return true;
-        }
-        debug('Member has not approved the PR');
-        return false;
-    }
-    isMemberApproved(reviews) {
-        const memberReviews = this.memberReviews(reviews);
-        let approved = false;
-        memberReviews.forEach((review, login) => {
-            if (review.state === 'APPROVED') {
-                notice(`🕵️ Member '${login}' has approved the PR`);
-                approved = true;
-            }
-        });
-        return approved;
     }
 }
 //# sourceMappingURL=pull-request.js.map

@@ -1,6 +1,7 @@
 import { CustomOctokit } from './octokit';
-import { CheckRuns, PullRequestApi, Reviews, Status } from './schema/pull-request';
+import { CheckRuns, PullRequestApi, Status } from './schema/pull-request';
 import { IgnoreChecks } from './schema/config';
+import { PullRequestReviews } from './reviews/pull-request-reviews';
 export declare class PullRequest {
     readonly number: number;
     readonly ref: string;
@@ -8,6 +9,7 @@ export declare class PullRequest {
     readonly repo: string;
     readonly octokit: CustomOctokit;
     currentLabels: string[];
+    reviews: PullRequestReviews;
     constructor(number: number, ref: string, owner: string, repo: string, octokit: CustomOctokit);
     getPullRequest(): Promise<PullRequestApi>;
     getLabels(): Promise<void>;
@@ -26,10 +28,4 @@ export declare class PullRequest {
         failed: string[];
         pending: string[];
     };
-    getReviews(): Promise<Reviews>;
-    isReviewed(reviews: Reviews): boolean;
-    isMemberReviewed(reviews: Reviews): boolean;
-    memberReviews(reviews: Reviews): Map<string, Reviews[number]>;
-    isApproved(reviews: Reviews): boolean;
-    isMemberApproved(reviews: Reviews): boolean;
 }

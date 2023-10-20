@@ -4,10 +4,11 @@ import { z } from 'zod';
 import '@total-typescript/ts-reset';
 
 import action from './action';
-import { pullRequestMetadataSchema } from './schema/input';
 import { getOctokit } from './octokit';
 import { PullRequest } from './pull-request';
 import { updateStatusCheck } from './util';
+
+import { pullRequestMetadataSchema } from './schema/input';
 
 const octokit = getOctokit(getInput('token', { required: true }));
 

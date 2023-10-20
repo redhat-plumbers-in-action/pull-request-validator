@@ -35006,9 +35006,8 @@ async function action(octokit, owner, repo, pr) {
             ? message.push(`🟡 CI - Waived`)
             : message.push(`🟢 CI - All checks have passed`);
     }
-    const reviews = await pr.getReviews();
-    const reviewed = pr.isReviewed(reviews);
-    if (!reviewed) {
+    await pr.reviews.initialize();
+    if (!pr.reviews.isReviewed()) {
         labels.add.push(config.labels['missing-review']);
         err.push(`🔴 Review - Missing review from a member.`);
     }
@@ -35017,8 +35016,7 @@ async function action(octokit, owner, repo, pr) {
             (0,util/* removeLabel */.qv)(octokit, owner, repo, pr.number, config.labels['missing-review']);
         }
         message.push(`🟢 Review - Reviewed by a member`);
-        const approved = pr.isApproved(reviews);
-        if (!approved) {
+        if (!pr.reviews.isApproved()) {
             labels.add.push(config.labels['changes-requested']);
             err.push(`🔴 Approval - missing or changes were requested.`);
         }
@@ -35050,10 +35048,10 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(2300);
 /* harmony import */ var _action__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5426);
-/* harmony import */ var _schema_input__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(9281);
-/* harmony import */ var _octokit__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(6161);
-/* harmony import */ var _pull_request__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(4806);
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(2629);
+/* harmony import */ var _octokit__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(6161);
+/* harmony import */ var _pull_request__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(4934);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2629);
+/* harmony import */ var _schema_input__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(9281);
 var _a, _b;
 
 
@@ -35063,7 +35061,7 @@ var _a, _b;
 
 
 
-const octokit = (0,_octokit__WEBPACK_IMPORTED_MODULE_3__/* .getOctokit */ .P)((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('token', { required: true }));
+const octokit = (0,_octokit__WEBPACK_IMPORTED_MODULE_2__/* .getOctokit */ .P)((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('token', { required: true }));
 const owner = zod__WEBPACK_IMPORTED_MODULE_6__.z.string()
     .min(1)
     .parse((_a = process.env.GITHUB_REPOSITORY) === null || _a === void 0 ? void 0 : _a.split('/')[0]);
@@ -35071,7 +35069,7 @@ const repo = zod__WEBPACK_IMPORTED_MODULE_6__.z.string()
     .min(1)
     .parse((_b = process.env.GITHUB_REPOSITORY) === null || _b === void 0 ? void 0 : _b.split('/')[1]);
 const prMetadataUnsafe = JSON.parse((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('pr-metadata', { required: true }));
-const prMetadata = _schema_input__WEBPACK_IMPORTED_MODULE_2__/* .pullRequestMetadataSchema.parse */ .z5.parse(prMetadataUnsafe);
+const prMetadata = _schema_input__WEBPACK_IMPORTED_MODULE_5__/* .pullRequestMetadataSchema.parse */ .z5.parse(prMetadataUnsafe);
 const commitSha = prMetadata.commits[prMetadata.commits.length - 1].sha;
 const checkRunID = (await octokit.request('POST /repos/{owner}/{repo}/check-runs', {
     owner,
@@ -35086,10 +35084,10 @@ const checkRunID = (await octokit.request('POST /repos/{owner}/{repo}/check-runs
     },
 })).data.id;
 try {
-    const pr = new _pull_request__WEBPACK_IMPORTED_MODULE_4__/* .PullRequest */ .i(prMetadata.number, commitSha, owner, repo, octokit);
+    const pr = new _pull_request__WEBPACK_IMPORTED_MODULE_3__/* .PullRequest */ .i(prMetadata.number, commitSha, owner, repo, octokit);
     await pr.getLabels();
     const message = await (0,_action__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z)(octokit, owner, repo, pr);
-    await (0,_util__WEBPACK_IMPORTED_MODULE_5__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'success', message);
+    await (0,_util__WEBPACK_IMPORTED_MODULE_4__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'success', message);
 }
 catch (error) {
     let message;
@@ -35100,7 +35098,7 @@ catch (error) {
         message = JSON.stringify(error);
     }
     (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(message);
-    await (0,_util__WEBPACK_IMPORTED_MODULE_5__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'failure', message);
+    await (0,_util__WEBPACK_IMPORTED_MODULE_4__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'failure', message);
 }
 
 __webpack_async_result__();
@@ -35134,7 +35132,7 @@ function getOctokit(token) {
 
 /***/ }),
 
-/***/ 4806:
+/***/ 4934:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -35196,8 +35194,88 @@ const reviewsSchema = lib.z.array(lib.z.object({
     author_association: lib.z.string(),
     submitted_at: lib.z.string().datetime(),
 }));
+const reviewRequestsSchema = lib.z.array(lib.z.object({
+    login: lib.z.string(),
+}));
+
+;// CONCATENATED MODULE: ./src/reviews/pull-request-reviews.ts
+
+
+class PullRequestReviews {
+    constructor(number, ref, owner, repo, octokit) {
+        this.number = number;
+        this.ref = ref;
+        this.owner = owner;
+        this.repo = repo;
+        this.octokit = octokit;
+        this.reviews = new Map();
+        this.reviewRequests = [];
+    }
+    //? This have to be run right after the constructor!
+    async initialize(mock) {
+        await this.getReviews(mock && mock.reviews);
+        await this.getReviewRequests(mock && mock.reviewRequests);
+    }
+    async getReviews(mock) {
+        const data = mock ||
+            (await this.octokit.paginate('GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
+                owner: this.owner,
+                repo: this.repo,
+                pull_number: this.number,
+                per_page: 100,
+            }));
+        const reviews = reviewsSchema.parse(data);
+        // We only care about the latest reviews from members
+        this.reviews = this.memberReviews(reviews);
+    }
+    async getReviewRequests(mock) {
+        const data = mock ||
+            (await this.octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers', {
+                owner: this.owner,
+                repo: this.repo,
+                pull_number: this.number,
+            }))['data'];
+        this.reviewRequests = reviewRequestsSchema.parse(data.users);
+    }
+    // Return a map of the latest review for each member
+    // For all members is required visibility to public otherwise the author_association is not available
+    memberReviews(reviews) {
+        const memberReviews = reviews.filter(review => review.state !== 'COMMENTED' &&
+            (review.author_association === 'MEMBER' ||
+                review.author_association === 'OWNER' ||
+                review.author_association === 'COLLABORATOR'));
+        let latestMemberReviews = new Map();
+        for (let review of memberReviews) {
+            let prev = latestMemberReviews.get(review.user.login);
+            if (prev && prev.id > review.id) {
+                continue;
+            }
+            latestMemberReviews.set(review.user.login, review);
+        }
+        return latestMemberReviews;
+    }
+    isReviewed() {
+        if (this.reviews.size > 0) {
+            (0,core.debug)('Member has reviewed the PR');
+            return true;
+        }
+        (0,core.debug)('Member has not reviewed the PR');
+        return false;
+    }
+    isApproved() {
+        let approved = false;
+        this.reviews.forEach((review, login) => {
+            if (review.state === 'APPROVED') {
+                (0,core.notice)(`🕵️ Member '${login}' has approved the PR`);
+                approved = true;
+            }
+        });
+        return approved;
+    }
+}
 
 ;// CONCATENATED MODULE: ./src/pull-request.ts
+
 
 
 
@@ -35209,6 +35287,7 @@ class PullRequest {
         this.repo = repo;
         this.octokit = octokit;
         this.currentLabels = [];
+        this.reviews = new PullRequestReviews(number, ref, owner, repo, octokit);
     }
     async getPullRequest() {
         const { data } = await this.octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
@@ -35300,64 +35379,6 @@ class PullRequest {
             .filter(item => item.state === 'pending')
             .map(item => `\`${item.context}[${item.state}]\``);
         return { failed, pending };
-    }
-    async getReviews() {
-        const data = await this.octokit.paginate('GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
-            owner: this.owner,
-            repo: this.repo,
-            pull_number: this.number,
-            per_page: 100,
-        });
-        return reviewsSchema.parse(data);
-    }
-    isReviewed(reviews) {
-        if (this.isMemberReviewed(reviews)) {
-            (0,core.debug)('Member has reviewed the PR');
-            return true;
-        }
-        (0,core.debug)('Member has not reviewed the PR');
-        return false;
-    }
-    // PR is considered as reviewed if a member has requested changes or approved it
-    isMemberReviewed(reviews) {
-        const memberReviews = this.memberReviews(reviews);
-        return memberReviews.size > 0;
-    }
-    // Return a map of the latest review for each member
-    // For all members is required visibility to public otherwise the author_association is not available
-    memberReviews(reviews) {
-        const memberReviews = reviews.filter(review => review.state !== 'COMMENTED' &&
-            (review.author_association === 'MEMBER' ||
-                review.author_association === 'OWNER' ||
-                review.author_association === 'COLLABORATOR'));
-        let latestMemberReviews = new Map();
-        for (let review of memberReviews) {
-            let prev = latestMemberReviews.get(review.user.login);
-            if (prev && prev.id > review.id) {
-                continue;
-            }
-            latestMemberReviews.set(review.user.login, review);
-        }
-        return latestMemberReviews;
-    }
-    isApproved(reviews) {
-        if (this.isMemberApproved(reviews)) {
-            (0,core.debug)('Member has approved the PR');
-            return true;
-        }
-        (0,core.debug)('Member has not approved the PR');
-        return false;
-    }
-    isMemberApproved(reviews) {
-        const memberReviews = this.memberReviews(reviews);
-        let approved = false;
-        memberReviews.forEach((review, login) => {
-            if (review.state === 'APPROVED') {
-                (0,core.notice)(`🕵️ Member '${login}' has approved the PR`);
-                approved = true;
-            }
-        });
-        return approved;
     }
 }
 
