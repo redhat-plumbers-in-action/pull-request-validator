@@ -44,9 +44,8 @@ async function action(
       : message.push(`🟢 CI - All checks have passed`);
   }
 
-  const reviews = await pr.getReviews();
-  const reviewed = pr.isReviewed(reviews);
-  if (!reviewed) {
+  await pr.reviews.initialize();
+  if (!pr.reviews.isReviewed()) {
     labels.add.push(config.labels['missing-review']);
     err.push(`🔴 Review - Missing review from a member.`);
   } else {
@@ -61,8 +60,7 @@ async function action(
     }
     message.push(`🟢 Review - Reviewed by a member`);
 
-    const approved = pr.isApproved(reviews);
-    if (!approved) {
+    if (!pr.reviews.isApproved()) {
       labels.add.push(config.labels['changes-requested']);
       err.push(`🔴 Approval - missing or changes were requested.`);
     } else {

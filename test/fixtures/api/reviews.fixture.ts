@@ -2,7 +2,7 @@ import { Endpoints } from '@octokit/types';
 
 import { reviewsSchema } from '../../../src/schema/pull-request';
 
-const reviewsAPIResponseApproved1Raw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
+export const reviewsAPIResponseApproved1Raw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
   [
     {
       id: 1038231493,
@@ -1923,7 +1923,7 @@ const reviewsAPIResponseApproved1Raw: Endpoints['GET /repos/{owner}/{repo}/pulls
     },
   ];
 
-const reviewsAPIResponseApproved2Raw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
+export const reviewsAPIResponseApproved2Raw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
   [
     {
       id: 1553277797,
@@ -2930,7 +2930,7 @@ const reviewsAPIResponseApproved2Raw: Endpoints['GET /repos/{owner}/{repo}/pulls
     },
   ];
 
-const reviewsAPIResponseReviewedRaw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
+export const reviewsAPIResponseReviewedRaw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
   [
     {
       id: 152435783,
@@ -3252,10 +3252,10 @@ const reviewsAPIResponseReviewedRaw: Endpoints['GET /repos/{owner}/{repo}/pulls/
     },
   ];
 
-const reviewsAPIResponseNoReviewRaw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
+export const reviewsAPIResponseNoReviewRaw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
   [];
 
-const reviewsAPIResponseApprovedWithRequestedChangesRaw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
+export const reviewsAPIResponseApprovedWithRequestedChangesRaw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
   [
     {
       id: 1365914,
@@ -6919,7 +6919,7 @@ const reviewsAPIResponseApprovedWithRequestedChangesRaw: Endpoints['GET /repos/{
     },
   ];
 
-const reviewsAPIResponseRequestedChangesRaw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
+export const reviewsAPIResponseRequestedChangesRaw: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data'] =
   [
     {
       id: 402794245,
@@ -9564,7 +9564,7 @@ const reviewsAPIResponseRequestedChangesRaw: Endpoints['GET /repos/{owner}/{repo
     },
   ];
 
-const reviewsAPIResponseApprovedByNonMemberRaw = [
+export const reviewsAPIResponseApprovedByNonMemberRaw = [
   {
     id: 1038231493,
     node_id: 'PRR_kwDOAfWbYc494ifF',
