@@ -1290,6 +1290,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"deepmerge@npm:^4.3.1":
+  version: 4.3.1
+  resolution: "deepmerge@npm:4.3.1"
+  checksum: 2024c6a980a1b7128084170c4cf56b0fd58a63f2da1660dcfe977415f27b17dbe5888668b59d0b063753f3220719d5e400b7f113609489c90160bb9a5518d052
+  languageName: node
+  linkType: hard
+
 "default-browser-id@npm:^3.0.0":
   version: 3.0.0
   resolution: "default-browser-id@npm:3.0.0"
@@ -2932,6 +2939,7 @@ __metadata:
     "@typescript-eslint/parser": ^6.7.4
     "@vercel/ncc": ^0.38.0
     "@vitest/coverage-v8": ^0.34.6
+    deepmerge: ^4.3.1
     eslint: ^8.50.0
     eslint-plugin-prettier: ^5.0.0
     js-yaml: ^4.1.0

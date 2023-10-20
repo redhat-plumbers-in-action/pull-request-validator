@@ -1,5 +1,6 @@
 import { debug, getInput } from '@actions/core';
 import { context } from '@actions/github';
+import deepmerge from 'deepmerge';
 
 import { CustomOctokit } from './octokit';
 import { configSchema, ConfigLabels, IgnoreChecks } from './schema/config';
@@ -34,7 +35,8 @@ export class Config {
       await octokit.config.get({
         ...context.repo,
         path,
-        defaults: Config.defaults,
+        defaults: configs =>
+          deepmerge.all([this.defaults, ...configs]) as Partial<Config>,
       })
     ).config;
 
