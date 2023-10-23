@@ -45,7 +45,9 @@ export const reviewsSchema = z.array(z.object({
     author_association: z.string(),
     submitted_at: z.string().datetime(),
 }));
-export const reviewRequestsSchema = z.array(z.object({
+export const reviewRequestsSchema = z.array(z
+    .object({
     login: z.string(),
-}));
+})
+    .transform(user => user.login));
 //# sourceMappingURL=pull-request.js.map

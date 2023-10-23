@@ -35010,6 +35010,9 @@ async function action(octokit, owner, repo, pr) {
     if (!pr.reviews.isReviewed()) {
         labels.add.push(config.labels['missing-review']);
         err.push(`🔴 Review - Missing review from a member.`);
+        if (pr.currentLabels.includes(config.labels['changes-requested'])) {
+            (0,util/* removeLabel */.qv)(octokit, owner, repo, pr.number, config.labels['changes-requested']);
+        }
     }
     else {
         if (pr.currentLabels.includes(config.labels['missing-review'])) {
@@ -35196,7 +35199,8 @@ const reviewsSchema = lib.z.array(lib.z.object({
 }));
 const reviewRequestsSchema = lib.z.array(lib.z.object({
     login: lib.z.string(),
-}));
+})
+    .transform(user => user.login));
 
 ;// CONCATENATED MODULE: ./src/reviews/pull-request-reviews.ts
 
@@ -35255,6 +35259,14 @@ class PullRequestReviews {
         return latestMemberReviews;
     }
     isReviewed() {
+        // When new review is requested, the review is removed from the reviews list
+        const members = this.reviews.keys();
+        for (const member of members) {
+            if (this.reviewRequests.includes(member)) {
+                this.reviews.delete(member);
+                (0,core.notice)(`🔬 New review requested from '${member}'`);
+            }
+        }
         if (this.reviews.size > 0) {
             (0,core.debug)('Member has reviewed the PR');
             return true;
