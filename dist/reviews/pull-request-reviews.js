@@ -54,6 +54,14 @@ export class PullRequestReviews {
         return latestMemberReviews;
     }
     isReviewed() {
+        // When new review is requested, the review is removed from the reviews list
+        const members = this.reviews.keys();
+        for (const member of members) {
+            if (this.reviewRequests.includes(member)) {
+                this.reviews.delete(member);
+                notice(`🔬 New review requested from '${member}'`);
+            }
+        }
         if (this.reviews.size > 0) {
             debug('Member has reviewed the PR');
             return true;

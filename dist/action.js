@@ -23,6 +23,9 @@ async function action(octokit, owner, repo, pr) {
     if (!pr.reviews.isReviewed()) {
         labels.add.push(config.labels['missing-review']);
         err.push(`🔴 Review - Missing review from a member.`);
+        if (pr.currentLabels.includes(config.labels['changes-requested'])) {
+            removeLabel(octokit, owner, repo, pr.number, config.labels['changes-requested']);
+        }
     }
     else {
         if (pr.currentLabels.includes(config.labels['missing-review'])) {

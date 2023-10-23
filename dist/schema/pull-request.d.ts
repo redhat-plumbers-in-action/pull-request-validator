@@ -146,11 +146,13 @@ export declare const reviewsSchema: z.ZodArray<z.ZodObject<{
     submitted_at: string;
 }>, "many">;
 export type Reviews = z.infer<typeof reviewsSchema>;
-export declare const reviewRequestsSchema: z.ZodArray<z.ZodObject<{
+export declare const reviewRequestsSchema: z.ZodArray<z.ZodEffects<z.ZodObject<{
     login: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     login: string;
 }, {
+    login: string;
+}>, string, {
     login: string;
 }>, "many">;
 export type ReviewRequests = z.infer<typeof reviewRequestsSchema>;
