@@ -104,6 +104,13 @@ export class PullRequestReviews {
       }
     }
 
+    this.reviews.forEach((review, login) => {
+      if (review.state === 'DISMISSED') {
+        notice(`❓ Review from '${login}' was dismissed`);
+        this.reviews.delete(login);
+      }
+    });
+
     if (this.reviews.size > 0) {
       debug('Member has reviewed the PR');
       return true;

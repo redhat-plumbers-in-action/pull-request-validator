@@ -35267,6 +35267,12 @@ class PullRequestReviews {
                 (0,core.notice)(`🔬 New review requested from '${member}'`);
             }
         }
+        this.reviews.forEach((review, login) => {
+            if (review.state === 'DISMISSED') {
+                (0,core.notice)(`❓ Review from '${login}' was dismissed`);
+                this.reviews.delete(login);
+            }
+        });
         if (this.reviews.size > 0) {
             (0,core.debug)('Member has reviewed the PR');
             return true;
