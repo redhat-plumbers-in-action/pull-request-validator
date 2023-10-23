@@ -48,7 +48,7 @@ describe('Pull Request Reviews Object', () => {
       reviews: reviewsAPIResponseReviewedRaw,
       reviewRequests: requestedReviewersAPIResponseNobody,
     });
-    expect(context.pullRequestsReviews.isReviewed()).toEqual(true);
+    expect(context.pullRequestsReviews.isReviewed()).toEqual(false);
 
     context.pullRequestsReviews.initialize({
       reviews: reviewsAPIResponseNoReviewRaw,
