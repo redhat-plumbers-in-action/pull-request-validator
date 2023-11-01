@@ -17,6 +17,7 @@ export class Config {
       'Pull Request Validator',
       'Advanced Commit Linter',
       'Tracker Validator',
+      'Auto Merge',
     ],
   };
   labels: ConfigLabels;

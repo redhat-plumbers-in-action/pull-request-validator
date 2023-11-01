@@ -200,6 +200,7 @@ ignore-checks:
   - Pull Request Validator
   - Advanced Commit Linter
   - Tracker Validator
+  - Auto Merge
 ```
 
 ### `labels` keyword
@@ -234,7 +235,7 @@ The name of the label that can be used to waive failing CI.
 
 Allows you to ignore certain checks when validating the Pull Request. This is useful when you have a CI that is not required to pass for the Pull Request to be merged.
 
-* default value: `['Pull Request Validator', 'Advanced Commit Linter', 'Tracker Validator']`
+* default value: `['Pull Request Validator', 'Advanced Commit Linter', 'Tracker Validator', 'Auto Merge']`
 
 ## Limitations
 
