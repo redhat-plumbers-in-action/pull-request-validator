@@ -34979,6 +34979,7 @@ Config.defaults = {
         'Pull Request Validator',
         'Advanced Commit Linter',
         'Tracker Validator',
+        'Auto Merge',
     ],
 };
 
