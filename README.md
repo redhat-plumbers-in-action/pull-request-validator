@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD033 MD041 -->
 <p align="center">
-  <img src="https://github.com/redhat-plumbers-in-action/team/blob/1d0fb016c60a7b0c155ceea53e6083f69d2d85b9/members/red-plumber.png" width="100" />
+  <img src="https://github.com/redhat-plumbers-in-action/team/blob/394d7f8e3441c7099f084d3843885cceb4617524/members/bordo-plumber.png" width="100" />
   <h1 align="center">Pull Request Validator</h1>
 </p>
 
