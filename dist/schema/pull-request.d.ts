@@ -33,9 +33,9 @@ export declare const pullRequestApiSchema: z.ZodObject<{
         sha: string;
     }[];
     labels: string[];
-    author_association: string;
-    auto_merge: boolean | null;
     draft: boolean;
+    auto_merge: boolean | null;
+    author_association: string;
     merged: boolean;
     mergeable: boolean;
     mergeable_state: string;
@@ -49,9 +49,9 @@ export declare const pullRequestApiSchema: z.ZodObject<{
     labels: {
         name: string;
     }[];
-    author_association: string;
-    auto_merge: boolean | null;
     draft: boolean;
+    auto_merge: boolean | null;
+    author_association: string;
     merged: boolean;
     mergeable: boolean;
     mergeable_state: string;
@@ -83,28 +83,28 @@ export declare const statusSchema: z.ZodObject<{
         description: z.ZodNullable<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         state: "failure" | "success" | "pending";
-        context: string;
         description: string | null;
+        context: string;
     }, {
         state: "failure" | "success" | "pending";
-        context: string;
         description: string | null;
+        context: string;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
     state: "failure" | "success" | "pending";
     total_count: number;
     statuses: {
         state: "failure" | "success" | "pending";
-        context: string;
         description: string | null;
+        context: string;
     }[];
 }, {
     state: "failure" | "success" | "pending";
     total_count: number;
     statuses: {
         state: "failure" | "success" | "pending";
-        context: string;
         description: string | null;
+        context: string;
     }[];
 }>;
 export type Status = z.infer<typeof statusSchema>;
@@ -125,24 +125,24 @@ export declare const reviewsSchema: z.ZodArray<z.ZodObject<{
     author_association: z.ZodString;
     submitted_at: z.ZodString;
 }, "strip", z.ZodTypeAny, {
+    state: string;
+    body: string;
     author_association: string;
     id: number;
-    state: string;
     user: {
         type: string;
         login: string;
     };
-    body: string;
     submitted_at: string;
 }, {
+    state: string;
+    body: string;
     author_association: string;
     id: number;
-    state: string;
     user: {
         type: string;
         login: string;
     };
-    body: string;
     submitted_at: string;
 }>, "many">;
 export type Reviews = z.infer<typeof reviewsSchema>;
