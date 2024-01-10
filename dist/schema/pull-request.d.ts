@@ -27,8 +27,8 @@ export declare const pullRequestApiSchema: z.ZodObject<{
     mergeable_state: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     number: number;
-    base: string;
     url: string;
+    base: string;
     commits: {
         sha: string;
     }[];
@@ -41,8 +41,8 @@ export declare const pullRequestApiSchema: z.ZodObject<{
     mergeable_state: string;
 }, {
     number: number;
-    base: string;
     url: string;
+    base: string;
     commits: {
         sha: string;
     }[];
@@ -63,15 +63,15 @@ export declare const checkRunsSchema: z.ZodArray<z.ZodObject<{
     status: z.ZodString;
     conclusion: z.ZodNullable<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
+    id: number;
     status: string;
     name: string;
     conclusion: string | null;
-    id: number;
 }, {
+    id: number;
     status: string;
     name: string;
     conclusion: string | null;
-    id: number;
 }>, "many">;
 export type CheckRuns = z.infer<typeof checkRunsSchema>;
 export declare const statusSchema: z.ZodObject<{
@@ -125,20 +125,20 @@ export declare const reviewsSchema: z.ZodArray<z.ZodObject<{
     author_association: z.ZodString;
     submitted_at: z.ZodString;
 }, "strip", z.ZodTypeAny, {
+    id: number;
     state: string;
     body: string;
     author_association: string;
-    id: number;
     user: {
         type: string;
         login: string;
     };
     submitted_at: string;
 }, {
+    id: number;
     state: string;
     body: string;
     author_association: string;
-    id: number;
     user: {
         type: string;
         login: string;
