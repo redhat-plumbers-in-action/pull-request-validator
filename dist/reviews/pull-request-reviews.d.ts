@@ -8,10 +8,10 @@ export declare class PullRequestReviews {
     readonly repo: string;
     readonly octokit: CustomOctokit;
     reviews: Map<string, {
+        id: number;
         state: string;
         body: string;
         author_association: string;
-        id: number;
         user: {
             type: string;
             login: string;
