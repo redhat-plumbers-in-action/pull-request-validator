@@ -36899,11 +36899,11 @@ if (setStatus) {
         },
     })).data.id;
 }
+const statusTitle = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('status-title', { required: true });
 try {
     const pr = new _pull_request__WEBPACK_IMPORTED_MODULE_4__/* .PullRequest */ .i(prMetadata.number, commitSha, owner, repo, octokit);
     await pr.getLabels();
     let message = await (0,_action__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z)(octokit, owner, repo, pr);
-    const statusTitle = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('status-title', { required: true });
     if (setStatus && checkRunID) {
         await (0,_util__WEBPACK_IMPORTED_MODULE_5__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'success', message);
     }
@@ -36920,15 +36920,18 @@ catch (error) {
     else {
         message = JSON.stringify(error);
     }
+    if (setStatus && checkRunID) {
+        await (0,_util__WEBPACK_IMPORTED_MODULE_5__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'failure', message);
+    }
+    if (statusTitle.length > 0) {
+        message = `### ${statusTitle}\n\n${message}`;
+    }
     // set status output only if error was thrown by us
     if (error instanceof _error__WEBPACK_IMPORTED_MODULE_2__/* .ValidationError */ .p) {
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)('status', JSON.stringify(message));
     }
     else {
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(message);
-    }
-    if (setStatus && checkRunID) {
-        await (0,_util__WEBPACK_IMPORTED_MODULE_5__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'failure', message);
     }
 }
 

@@ -36,11 +36,11 @@ if (setStatus) {
         },
     })).data.id;
 }
+const statusTitle = getInput('status-title', { required: true });
 try {
     const pr = new PullRequest(prMetadata.number, commitSha, owner, repo, octokit);
     await pr.getLabels();
     let message = await action(octokit, owner, repo, pr);
-    const statusTitle = getInput('status-title', { required: true });
     if (setStatus && checkRunID) {
         await updateStatusCheck(octokit, checkRunID, owner, repo, 'completed', 'success', message);
     }
@@ -57,15 +57,18 @@ catch (error) {
     else {
         message = JSON.stringify(error);
     }
+    if (setStatus && checkRunID) {
+        await updateStatusCheck(octokit, checkRunID, owner, repo, 'completed', 'failure', message);
+    }
+    if (statusTitle.length > 0) {
+        message = `### ${statusTitle}\n\n${message}`;
+    }
     // set status output only if error was thrown by us
     if (error instanceof ValidationError) {
         setOutput('status', JSON.stringify(message));
     }
     else {
         setFailed(message);
-    }
-    if (setStatus && checkRunID) {
-        await updateStatusCheck(octokit, checkRunID, owner, repo, 'completed', 'failure', message);
     }
 }
 //# sourceMappingURL=main.js.map
