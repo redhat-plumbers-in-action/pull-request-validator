@@ -1,4 +1,5 @@
 import { debug } from '@actions/core';
+import { ValidationError } from './error';
 // Update check run - check completed + conclusion
 // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#update-a-check-run
 // ! Allow specifying workflow run when creating a checkrun from a GitHub workflow
@@ -22,13 +23,13 @@ export function getFailedMessage(error) {
     if (error.length === 0) {
         return '';
     }
-    return '### Failed' + '\n\n' + error.join('\n');
+    return '#### Failed' + '\n\n' + error.join('\n');
 }
 export function getSuccessMessage(message) {
     if (message.length === 0) {
         return '';
     }
-    return '### Success' + '\n\n' + message.join('\n');
+    return '#### Success' + '\n\n' + message.join('\n');
 }
 export async function setLabels(octokit, owner, repo, issueNumber, labels) {
     if (labels.length === 0) {
@@ -51,6 +52,6 @@ export async function removeLabel(octokit, owner, repo, issueNumber, label) {
     });
 }
 export function raise(error) {
-    throw new Error(error);
+    throw new ValidationError(error);
 }
 //# sourceMappingURL=util.js.map

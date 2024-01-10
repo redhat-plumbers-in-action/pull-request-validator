@@ -135,6 +135,8 @@ Action currently accepts the following options:
   with:
     pr-metadata:  <pr-metadata.json>
     config-path:  <path to config file>
+    set-status:   <true or false>
+    status-title: <status title>
     token:        <GitHub token or PAT>
 
 # ...
@@ -156,6 +158,20 @@ Path to configuration file. Configuration file format is described in: [Policy s
 * default value: `.github/pull-request-validator.yml`
 * requirements: `optional`
 
+### set-status
+
+Set status on Pull Request. If enabled, Action will create check-run status with validation results.
+
+* default value: `false`
+* requirements: `optional`
+
+### status-title
+
+Optional H3 title of status message.
+
+* default value: `Pull Request validation`
+* requirements: `optional`
+
 ### token
 
 GitHub token or PAT is used for creating comments on Pull Request and setting checks.
@@ -170,6 +186,12 @@ permissions:
 * default value: `undefined`
 * requirements: `required`
 * recomended value: `secrets.GITHUB_TOKEN`
+
+## Outputs
+
+### `status`
+
+Message with status of Pull Request validation.
 
 ## Policy
 

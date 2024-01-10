@@ -7,22 +7,22 @@ describe('Test Util functions', () => {
     expect(getFailedMessage([])).toBe('');
     expect(getFailedMessage(['CI failed', 'PR needs review']))
       .toMatchInlineSnapshot(`
-      "### Failed
+        "#### Failed
 
-      CI failed
-      PR needs review"
-    `);
+        CI failed
+        PR needs review"
+      `);
   });
 
   test('getSuccessMessage()', () => {
     expect(getSuccessMessage([])).toBe('');
     expect(getSuccessMessage(['CI passed', 'PR reviewed']))
       .toMatchInlineSnapshot(`
-      "### Success
+        "#### Success
 
-      CI passed
-      PR reviewed"
-    `);
+        CI passed
+        PR reviewed"
+      `);
   });
 
   test('raise()', () =>

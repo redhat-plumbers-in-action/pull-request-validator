@@ -2,6 +2,8 @@ import { debug } from '@actions/core';
 import { Octokit } from '@octokit/core';
 import { Endpoints } from '@octokit/types';
 
+import { ValidationError } from './error';
+
 // Update check run - check completed + conclusion
 // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#update-a-check-run
 // ! Allow specifying workflow run when creating a checkrun from a GitHub workflow
@@ -38,7 +40,7 @@ export function getFailedMessage(error: string[]): string {
     return '';
   }
 
-  return '### Failed' + '\n\n' + error.join('\n');
+  return '#### Failed' + '\n\n' + error.join('\n');
 }
 
 export function getSuccessMessage(message: string[]): string {
@@ -46,7 +48,7 @@ export function getSuccessMessage(message: string[]): string {
     return '';
   }
 
-  return '### Success' + '\n\n' + message.join('\n');
+  return '#### Success' + '\n\n' + message.join('\n');
 }
 
 export async function setLabels(
@@ -91,5 +93,5 @@ export async function removeLabel(
 }
 
 export function raise(error: string): never {
-  throw new Error(error);
+  throw new ValidationError(error);
 }
