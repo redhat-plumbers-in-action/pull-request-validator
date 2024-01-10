@@ -36831,6 +36831,23 @@ async function action(octokit, owner, repo, pr) {
 
 /***/ }),
 
+/***/ 6388:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "p": () => (/* binding */ ValidationError)
+/* harmony export */ });
+class ValidationError extends Error {
+    constructor(message, code) {
+        super(message);
+        this.code = code;
+    }
+}
+
+
+/***/ }),
+
 /***/ 399:
 /***/ ((module, __webpack_exports__, __nccwpck_require__) => {
 
@@ -36839,12 +36856,13 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(2300);
+/* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_7__ = __nccwpck_require__(2300);
 /* harmony import */ var _action__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5426);
-/* harmony import */ var _octokit__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(6161);
-/* harmony import */ var _pull_request__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(4934);
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2629);
-/* harmony import */ var _schema_input__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(9281);
+/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(6388);
+/* harmony import */ var _octokit__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(6161);
+/* harmony import */ var _pull_request__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(4934);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(2629);
+/* harmony import */ var _schema_input__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(9281);
 var _a, _b;
 
 
@@ -36854,33 +36872,45 @@ var _a, _b;
 
 
 
-const octokit = (0,_octokit__WEBPACK_IMPORTED_MODULE_2__/* .getOctokit */ .P)((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('token', { required: true }));
-const owner = zod__WEBPACK_IMPORTED_MODULE_6__.z.string()
+
+const octokit = (0,_octokit__WEBPACK_IMPORTED_MODULE_3__/* .getOctokit */ .P)((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('token', { required: true }));
+const owner = zod__WEBPACK_IMPORTED_MODULE_7__.z.string()
     .min(1)
     .parse((_a = process.env.GITHUB_REPOSITORY) === null || _a === void 0 ? void 0 : _a.split('/')[0]);
-const repo = zod__WEBPACK_IMPORTED_MODULE_6__.z.string()
+const repo = zod__WEBPACK_IMPORTED_MODULE_7__.z.string()
     .min(1)
     .parse((_b = process.env.GITHUB_REPOSITORY) === null || _b === void 0 ? void 0 : _b.split('/')[1]);
 const prMetadataUnsafe = JSON.parse((0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('pr-metadata', { required: true }));
-const prMetadata = _schema_input__WEBPACK_IMPORTED_MODULE_5__/* .pullRequestMetadataSchema.parse */ .z5.parse(prMetadataUnsafe);
+const prMetadata = _schema_input__WEBPACK_IMPORTED_MODULE_6__/* .pullRequestMetadataSchema.parse */ .z5.parse(prMetadataUnsafe);
 const commitSha = prMetadata.commits[prMetadata.commits.length - 1].sha;
-const checkRunID = (await octokit.request('POST /repos/{owner}/{repo}/check-runs', {
-    owner,
-    repo,
-    name: 'Pull Request Validator',
-    head_sha: commitSha,
-    status: 'in_progress',
-    started_at: new Date().toISOString(),
-    output: {
-        title: 'Pull Request Validator',
-        summary: 'Pull Request Validator in progress ...',
-    },
-})).data.id;
+const setStatus = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput)('set-status', { required: true });
+let checkRunID;
+if (setStatus) {
+    checkRunID = (await octokit.request('POST /repos/{owner}/{repo}/check-runs', {
+        owner,
+        repo,
+        name: 'Pull Request Validator',
+        head_sha: commitSha,
+        status: 'in_progress',
+        started_at: new Date().toISOString(),
+        output: {
+            title: 'Pull Request Validator',
+            summary: 'Pull Request Validator in progress ...',
+        },
+    })).data.id;
+}
 try {
-    const pr = new _pull_request__WEBPACK_IMPORTED_MODULE_3__/* .PullRequest */ .i(prMetadata.number, commitSha, owner, repo, octokit);
+    const pr = new _pull_request__WEBPACK_IMPORTED_MODULE_4__/* .PullRequest */ .i(prMetadata.number, commitSha, owner, repo, octokit);
     await pr.getLabels();
-    const message = await (0,_action__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z)(octokit, owner, repo, pr);
-    await (0,_util__WEBPACK_IMPORTED_MODULE_4__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'success', message);
+    let message = await (0,_action__WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z)(octokit, owner, repo, pr);
+    const statusTitle = (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput)('status-title', { required: true });
+    if (setStatus && checkRunID) {
+        await (0,_util__WEBPACK_IMPORTED_MODULE_5__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'success', message);
+    }
+    if (statusTitle.length > 0) {
+        message = `### ${statusTitle}\n\n${message}`;
+    }
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)('status', JSON.stringify(message));
 }
 catch (error) {
     let message;
@@ -36890,8 +36920,16 @@ catch (error) {
     else {
         message = JSON.stringify(error);
     }
-    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(message);
-    await (0,_util__WEBPACK_IMPORTED_MODULE_4__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'failure', message);
+    // set status output only if error was thrown by us
+    if (error instanceof _error__WEBPACK_IMPORTED_MODULE_2__/* .ValidationError */ .p) {
+        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)('status', JSON.stringify(message));
+    }
+    else {
+        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(message);
+    }
+    if (setStatus && checkRunID) {
+        await (0,_util__WEBPACK_IMPORTED_MODULE_5__/* .updateStatusCheck */ .B3)(octokit, checkRunID, owner, repo, 'completed', 'failure', message);
+    }
 }
 
 __webpack_async_result__();
@@ -37251,6 +37289,8 @@ const pullRequestMetadataSchema = zod__WEBPACK_IMPORTED_MODULE_0__.z.object({
 /* harmony export */ });
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(6388);
+
 
 // Update check run - check completed + conclusion
 // https://docs.github.com/en/rest/checks/runs?apiVersion=2022-11-28#update-a-check-run
@@ -37275,13 +37315,13 @@ function getFailedMessage(error) {
     if (error.length === 0) {
         return '';
     }
-    return '### Failed' + '\n\n' + error.join('\n');
+    return '#### Failed' + '\n\n' + error.join('\n');
 }
 function getSuccessMessage(message) {
     if (message.length === 0) {
         return '';
     }
-    return '### Success' + '\n\n' + message.join('\n');
+    return '#### Success' + '\n\n' + message.join('\n');
 }
 async function setLabels(octokit, owner, repo, issueNumber, labels) {
     if (labels.length === 0) {
@@ -37304,7 +37344,7 @@ async function removeLabel(octokit, owner, repo, issueNumber, label) {
     });
 }
 function raise(error) {
-    throw new Error(error);
+    throw new _error__WEBPACK_IMPORTED_MODULE_1__/* .ValidationError */ .p(error);
 }
 
 

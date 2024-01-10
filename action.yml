@@ -16,9 +16,22 @@ inputs:
     default: .github/pull-request-validator.yml
     description: Path to configuration file
 
+  set-status:
+    required: true
+    default: 'false'
+    description: Set check-run status on Pull Request
+  status-title:
+    required: false
+    default: Pull Request validation
+    description: H3 title of status message
+
   token:
     required: true
     description: GitHub TOKEN or PAT
+
+outputs:
+  status:
+    description: Status message of the validation
 
 runs:
   using: node20
