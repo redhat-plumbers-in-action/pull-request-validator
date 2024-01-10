@@ -110,7 +110,7 @@ try {
   // set status output only if error was thrown by us
   if (error instanceof ValidationError) {
     setOutput('status', JSON.stringify(message));
-  } else {
-    setFailed(message);
   }
+
+  setFailed(message);
 }

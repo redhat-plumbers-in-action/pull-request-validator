@@ -36930,9 +36930,7 @@ catch (error) {
     if (error instanceof _error__WEBPACK_IMPORTED_MODULE_2__/* .ValidationError */ .p) {
         (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput)('status', JSON.stringify(message));
     }
-    else {
-        (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(message);
-    }
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed)(message);
 }
 
 __webpack_async_result__();

@@ -67,8 +67,6 @@ catch (error) {
     if (error instanceof ValidationError) {
         setOutput('status', JSON.stringify(message));
     }
-    else {
-        setFailed(message);
-    }
+    setFailed(message);
 }
 //# sourceMappingURL=main.js.map
