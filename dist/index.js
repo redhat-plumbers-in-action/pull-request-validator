@@ -36799,7 +36799,7 @@ async function action(octokit, owner, repo, pr) {
     await pr.reviews.initialize();
     if (!pr.reviews.isReviewed()) {
         labels.add.push(config.labels['missing-review']);
-        err.push(`🔴 Review - Missing review from a member.`);
+        err.push(`🔴 Review - Missing review from a member`);
         if (pr.currentLabels.includes(config.labels['changes-requested'])) {
             (0,util/* removeLabel */.qv)(octokit, owner, repo, pr.number, config.labels['changes-requested']);
         }
@@ -36811,7 +36811,7 @@ async function action(octokit, owner, repo, pr) {
         message.push(`🟢 Review - Reviewed by a member`);
         if (!pr.reviews.isApproved()) {
             labels.add.push(config.labels['changes-requested']);
-            err.push(`🔴 Approval - missing or changes were requested.`);
+            err.push(`🔴 Approval - missing or changes were requested`);
         }
         else {
             if (pr.currentLabels.includes(config.labels['changes-requested'])) {

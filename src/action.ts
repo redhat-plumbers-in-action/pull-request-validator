@@ -47,7 +47,7 @@ async function action(
   await pr.reviews.initialize();
   if (!pr.reviews.isReviewed()) {
     labels.add.push(config.labels['missing-review']);
-    err.push(`🔴 Review - Missing review from a member.`);
+    err.push(`🔴 Review - Missing review from a member`);
 
     if (pr.currentLabels.includes(config.labels['changes-requested'])) {
       removeLabel(
@@ -72,7 +72,7 @@ async function action(
 
     if (!pr.reviews.isApproved()) {
       labels.add.push(config.labels['changes-requested']);
-      err.push(`🔴 Approval - missing or changes were requested.`);
+      err.push(`🔴 Approval - missing or changes were requested`);
     } else {
       if (pr.currentLabels.includes(config.labels['changes-requested'])) {
         removeLabel(
