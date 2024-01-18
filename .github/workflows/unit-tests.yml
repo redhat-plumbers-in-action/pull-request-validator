@@ -1,12 +1,11 @@
 ---
-
 name: Unit tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -17,17 +16,12 @@ jobs:
     name: Unit Tests - Node.js
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [ 16.x, 18.x ]
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20
           cache: yarn
           cache-dependency-path: yarn.lock
 
@@ -44,5 +38,6 @@ jobs:
         run: yarn test
 
       - name: Codecov
-        if: ${{ matrix.node-version == '18.x' }}
         uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
