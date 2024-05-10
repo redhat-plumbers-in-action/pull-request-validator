@@ -82,27 +82,27 @@ export declare const statusSchema: z.ZodObject<{
         context: z.ZodString;
         description: z.ZodNullable<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        state: "failure" | "success" | "pending";
+        state: "pending" | "failure" | "success";
         description: string | null;
         context: string;
     }, {
-        state: "failure" | "success" | "pending";
+        state: "pending" | "failure" | "success";
         description: string | null;
         context: string;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
-    state: "failure" | "success" | "pending";
+    state: "pending" | "failure" | "success";
     total_count: number;
     statuses: {
-        state: "failure" | "success" | "pending";
+        state: "pending" | "failure" | "success";
         description: string | null;
         context: string;
     }[];
 }, {
-    state: "failure" | "success" | "pending";
+    state: "pending" | "failure" | "success";
     total_count: number;
     statuses: {
-        state: "failure" | "success" | "pending";
+        state: "pending" | "failure" | "success";
         description: string | null;
         context: string;
     }[];
