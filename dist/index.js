@@ -30867,7 +30867,11 @@ async function action(octokit, owner, repo, pr) {
     }
     (0,util/* setLabels */.Uu)(octokit, owner, repo, pr.number, labels.add);
     if (err.length > 0) {
-        (0,util/* raise */.OU)((0,util/* getFailedMessage */.T5)(err) + '\n\n' + (0,util/* getSuccessMessage */.Yr)(message));
+        const result = (0,util/* getFailedMessage */.T5)(err) + '\n\n' + (0,util/* getSuccessMessage */.Yr)(message);
+        if (isCiWaived) {
+            return result;
+        }
+        (0,util/* raise */.OU)(result);
     }
     return (0,util/* getSuccessMessage */.Yr)(message);
 }
