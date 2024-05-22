@@ -90,7 +90,13 @@ async function action(
   setLabels(octokit, owner, repo, pr.number, labels.add);
 
   if (err.length > 0) {
-    raise(getFailedMessage(err) + '\n\n' + getSuccessMessage(message));
+    const result = getFailedMessage(err) + '\n\n' + getSuccessMessage(message);
+
+    if (isCiWaived) {
+      return result;
+    }
+
+    raise(result);
   }
 
   return getSuccessMessage(message);
