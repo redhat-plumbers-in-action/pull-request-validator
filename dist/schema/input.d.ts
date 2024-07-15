@@ -28,15 +28,15 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
     number: number;
-    url: string;
     base: string;
+    url: string;
     commits: {
         sha: string;
     }[];
 }, {
     number: number;
-    url: string;
     base: string;
+    url: string;
     commits: {
         sha: string;
     }[];

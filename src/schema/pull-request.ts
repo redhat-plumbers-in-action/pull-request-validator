@@ -37,6 +37,7 @@ const stateSchema = z.union([
   z.literal('success'),
   z.literal('pending'),
   z.literal('failure'),
+  z.literal('error'),
 ]);
 
 export const statusSchema = z.object({

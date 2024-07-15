@@ -36775,6 +36775,7 @@ const stateSchema = lib.z.union([
     lib.z.literal('success'),
     lib.z.literal('pending'),
     lib.z.literal('failure'),
+    lib.z.literal('error'),
 ]);
 const statusSchema = lib.z.object({
     state: stateSchema,
