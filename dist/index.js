@@ -36953,7 +36953,7 @@ class PullRequest {
             statusSuccess = false;
             const failedStatuses = this.isFailedOrPendingStatuses(status.statuses);
             message.length > 0 && (message += '\t');
-            message += `Failed or pending statuses - ${failedStatuses.failed.concat(failedStatuses.pending)}`;
+            message += `Failed or pending statuses - ${failedStatuses.error.concat(failedStatuses.failed, failedStatuses.pending)}`;
         }
         return { result: checkRunsSuccess && statusSuccess, message };
     }
@@ -36990,13 +36990,16 @@ class PullRequest {
         return { failed, pending };
     }
     isFailedOrPendingStatuses(results) {
+        const error = results
+            .filter(item => item.state === 'error')
+            .map(item => `\`${item.context}[${item.state}]\``);
         const failed = results
             .filter(item => item.state === 'failure')
             .map(item => `\`${item.context}[${item.state}]\``);
         const pending = results
             .filter(item => item.state === 'pending')
             .map(item => `\`${item.context}[${item.state}]\``);
-        return { failed, pending };
+        return { error, failed, pending };
     }
 }
 

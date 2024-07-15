@@ -25,6 +25,7 @@ export declare class PullRequest {
         pending: string[];
     };
     isFailedOrPendingStatuses(results: Status['statuses']): {
+        error: string[];
         failed: string[];
         pending: string[];
     };
