@@ -92,7 +92,8 @@ export class PullRequest {
       statusSuccess = false;
       const failedStatuses = this.isFailedOrPendingStatuses(status.statuses);
       message.length > 0 && (message += '\t');
-      message += `Failed or pending statuses - ${failedStatuses.failed.concat(
+      message += `Failed or pending statuses - ${failedStatuses.error.concat(
+        failedStatuses.failed,
         failedStatuses.pending
       )}`;
     }
@@ -153,9 +154,13 @@ export class PullRequest {
   }
 
   isFailedOrPendingStatuses(results: Status['statuses']): {
+    error: string[];
     failed: string[];
     pending: string[];
   } {
+    const error = results
+      .filter(item => item.state === 'error')
+      .map(item => `\`${item.context}[${item.state}]\``);
     const failed = results
       .filter(item => item.state === 'failure')
       .map(item => `\`${item.context}[${item.state}]\``);
@@ -163,6 +168,6 @@ export class PullRequest {
       .filter(item => item.state === 'pending')
       .map(item => `\`${item.context}[${item.state}]\``);
 
-    return { failed, pending };
+    return { error, failed, pending };
   }
 }
