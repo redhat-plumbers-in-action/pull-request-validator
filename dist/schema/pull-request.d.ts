@@ -27,8 +27,8 @@ export declare const pullRequestApiSchema: z.ZodObject<{
     mergeable_state: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     number: number;
-    url: string;
     base: string;
+    url: string;
     commits: {
         sha: string;
     }[];
@@ -41,8 +41,8 @@ export declare const pullRequestApiSchema: z.ZodObject<{
     mergeable_state: string;
 }, {
     number: number;
-    url: string;
     base: string;
+    url: string;
     commits: {
         sha: string;
     }[];
@@ -75,34 +75,34 @@ export declare const checkRunsSchema: z.ZodArray<z.ZodObject<{
 }>, "many">;
 export type CheckRuns = z.infer<typeof checkRunsSchema>;
 export declare const statusSchema: z.ZodObject<{
-    state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">]>;
+    state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">, z.ZodLiteral<"error">]>;
     total_count: z.ZodNumber;
     statuses: z.ZodArray<z.ZodObject<{
-        state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">]>;
+        state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">, z.ZodLiteral<"error">]>;
         context: z.ZodString;
         description: z.ZodNullable<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        state: "pending" | "failure" | "success";
+        state: "pending" | "failure" | "success" | "error";
         description: string | null;
         context: string;
     }, {
-        state: "pending" | "failure" | "success";
+        state: "pending" | "failure" | "success" | "error";
         description: string | null;
         context: string;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
-    state: "pending" | "failure" | "success";
+    state: "pending" | "failure" | "success" | "error";
     total_count: number;
     statuses: {
-        state: "pending" | "failure" | "success";
+        state: "pending" | "failure" | "success" | "error";
         description: string | null;
         context: string;
     }[];
 }, {
-    state: "pending" | "failure" | "success";
+    state: "pending" | "failure" | "success" | "error";
     total_count: number;
     statuses: {
-        state: "pending" | "failure" | "success";
+        state: "pending" | "failure" | "success" | "error";
         description: string | null;
         context: string;
     }[];

@@ -14,5 +14,5 @@ export declare class Config {
     ignoreChecks: IgnoreChecks;
     constructor(config: unknown);
     static getConfig(octokit: CustomOctokit): Promise<Config>;
-    static isConfigEmpty(config: unknown): boolean;
+    static isConfigEmpty(config: unknown): config is null | undefined;
 }
