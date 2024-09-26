@@ -27,6 +27,6 @@ export declare class PullRequestReviews {
     getReviews(mock?: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews']['response']['data']): Promise<void>;
     getReviewRequests(mock?: Endpoints['GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers']['response']['data']): Promise<void>;
     memberReviews(reviews: Reviews): Map<string, Reviews[number]>;
-    isReviewed(): boolean;
+    isReviewed(requiredReviews: number): boolean;
     isApproved(): boolean;
 }

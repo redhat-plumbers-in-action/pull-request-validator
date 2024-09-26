@@ -30770,13 +30770,13 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(7484);
+// EXTERNAL MODULE: ./node_modules/zod/lib/index.mjs
+var lib = __nccwpck_require__(4383);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(3228);
 // EXTERNAL MODULE: ./node_modules/deepmerge/dist/cjs.js
 var cjs = __nccwpck_require__(2569);
 var cjs_default = /*#__PURE__*/__nccwpck_require__.n(cjs);
-// EXTERNAL MODULE: ./node_modules/zod/lib/index.mjs
-var lib = __nccwpck_require__(4383);
 ;// CONCATENATED MODULE: ./src/schema/config.ts
 
 const configLabelsSchema = lib.z.object({
@@ -30835,6 +30835,8 @@ var util = __nccwpck_require__(4527);
 ;// CONCATENATED MODULE: ./src/action.ts
 
 
+
+
 async function action(octokit, owner, repo, pr) {
     let message = [];
     let err = [];
@@ -30855,9 +30857,20 @@ async function action(octokit, owner, repo, pr) {
             : message.push(`🟢 CI - All checks have passed`);
     }
     await pr.reviews.initialize();
-    if (!pr.reviews.isReviewed()) {
+    const requiredApprovalsRay = lib.z.coerce
+        .number()
+        .safeParse((0,core.getInput)('required-approvals'));
+    const requiredApprovals = requiredApprovalsRay.success
+        ? requiredApprovalsRay.data
+        : 1;
+    if (!pr.reviews.isReviewed(requiredApprovals)) {
         labels.add.push(config.labels['missing-review']);
-        err.push(`🔴 Review - Missing review from a member`);
+        err.push(`🔴 Review - Missing review from a member (_**${requiredApprovals}** required_)`);
+        if (pr.reviews.reviews.size > 0) {
+            message.push(`🟢 Review - Reviewed by ${pr.reviews.reviews.forEach((_value, key, _map) => {
+                return `\`${key}\` `;
+            })}`);
+        }
         if (pr.currentLabels.includes(config.labels['changes-requested'])) {
             (0,util/* removeLabel */.tA)(octokit, owner, repo, pr.number, config.labels['changes-requested']);
         }
@@ -36846,7 +36859,7 @@ class PullRequestReviews {
         }
         return latestMemberReviews;
     }
-    isReviewed() {
+    isReviewed(requiredReviews) {
         // When new review is requested, the review is removed from the reviews list
         const members = this.reviews.keys();
         for (const member of members) {
@@ -36861,7 +36874,7 @@ class PullRequestReviews {
                 this.reviews.delete(login);
             }
         });
-        if (this.reviews.size > 0) {
+        if (this.reviews.size >= requiredReviews) {
             (0,core.debug)('Member has reviewed the PR');
             return true;
         }

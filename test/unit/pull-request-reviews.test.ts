@@ -36,43 +36,43 @@ describe('Pull Request Reviews Object', () => {
       reviews: reviewsAPIResponseApproved1Raw,
       reviewRequests: requestedReviewersAPIResponseNobody,
     });
-    expect(context.pullRequestsReviews.isReviewed()).toEqual(true);
+    expect(context.pullRequestsReviews.isReviewed(1)).toEqual(true);
 
     context.pullRequestsReviews.initialize({
       reviews: reviewsAPIResponseApproved2Raw,
       reviewRequests: requestedReviewersAPIResponseNobody,
     });
-    expect(context.pullRequestsReviews.isReviewed()).toEqual(true);
+    expect(context.pullRequestsReviews.isReviewed(1)).toEqual(true);
 
     context.pullRequestsReviews.initialize({
       reviews: reviewsAPIResponseReviewedRaw,
       reviewRequests: requestedReviewersAPIResponseNobody,
     });
-    expect(context.pullRequestsReviews.isReviewed()).toEqual(false);
+    expect(context.pullRequestsReviews.isReviewed(1)).toEqual(false);
 
     context.pullRequestsReviews.initialize({
       reviews: reviewsAPIResponseNoReviewRaw,
       reviewRequests: requestedReviewersAPIResponseNobody,
     });
-    expect(context.pullRequestsReviews.isReviewed()).toEqual(false);
+    expect(context.pullRequestsReviews.isReviewed(1)).toEqual(false);
 
     context.pullRequestsReviews.initialize({
       reviews: reviewsAPIResponseRequestedChangesRaw,
       reviewRequests: requestedReviewersAPIResponseNobody,
     });
-    expect(context.pullRequestsReviews.isReviewed()).toEqual(true);
+    expect(context.pullRequestsReviews.isReviewed(1)).toEqual(true);
 
     context.pullRequestsReviews.initialize({
       reviews: reviewsAPIResponseApprovedWithRequestedChangesRaw,
       reviewRequests: requestedReviewersAPIResponseNobody,
     });
-    expect(context.pullRequestsReviews.isReviewed()).toEqual(true);
+    expect(context.pullRequestsReviews.isReviewed(1)).toEqual(true);
 
     context.pullRequestsReviews.initialize({
       reviews: reviewsAPIResponseApprovedByNonMemberRaw as any,
       reviewRequests: requestedReviewersAPIResponseNobody,
     });
-    expect(context.pullRequestsReviews.isReviewed()).toEqual(true);
+    expect(context.pullRequestsReviews.isReviewed(1)).toEqual(true);
   });
 
   test<PullRequestReviewsTestContext>('memberReviews()', context => {
