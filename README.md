@@ -133,11 +133,12 @@ Action currently accepts the following options:
 
 - uses: redhat-plumbers-in-action/pull-request-validator@v1
   with:
-    pr-metadata:  <pr-metadata.json>
-    config-path:  <path to config file>
-    set-status:   <true or false>
-    status-title: <status title>
-    token:        <GitHub token or PAT>
+    pr-metadata:        <pr-metadata.json>
+    config-path:        <path to config file>
+    required-approvals: <number of required approvals>
+    set-status:         <true or false>
+    status-title:       <status title>
+    token:              <GitHub token or PAT>
 
 # ...
 ```
@@ -156,6 +157,13 @@ Pull Request metadata has the following format: [metadata format](https://github
 Path to configuration file. Configuration file format is described in: [Policy section](#policy).
 
 * default value: `.github/pull-request-validator.yml`
+* requirements: `optional`
+
+### required-approvals
+
+Number of required approvals for Pull Request.
+
+* default value: `1`
 * requirements: `optional`
 
 ### set-status

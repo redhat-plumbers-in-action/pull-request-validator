@@ -16,6 +16,10 @@ inputs:
     default: .github/pull-request-validator.yml
     description: Path to configuration file
 
+  required-approvals:
+    default: '1'
+    description: Number of required approvals
+
   set-status:
     required: true
     default: 'false'

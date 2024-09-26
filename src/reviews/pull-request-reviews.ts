@@ -94,7 +94,7 @@ export class PullRequestReviews {
     return latestMemberReviews;
   }
 
-  isReviewed(): boolean {
+  isReviewed(requiredReviews: number): boolean {
     // When new review is requested, the review is removed from the reviews list
     const members = this.reviews.keys();
     for (const member of members) {
@@ -111,7 +111,7 @@ export class PullRequestReviews {
       }
     });
 
-    if (this.reviews.size > 0) {
+    if (this.reviews.size >= requiredReviews) {
       debug('Member has reviewed the PR');
       return true;
     }

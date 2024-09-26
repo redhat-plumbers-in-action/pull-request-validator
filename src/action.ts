@@ -1,3 +1,6 @@
+import { getInput } from '@actions/core';
+import { z } from 'zod';
+
 import { Config } from './config';
 import { CustomOctokit } from './octokit';
 import { PullRequest } from './pull-request';
@@ -45,9 +48,29 @@ async function action(
   }
 
   await pr.reviews.initialize();
-  if (!pr.reviews.isReviewed()) {
+  const requiredApprovalsRay = z.coerce
+    .number()
+    .safeParse(getInput('required-approvals'));
+
+  const requiredApprovals = requiredApprovalsRay.success
+    ? requiredApprovalsRay.data
+    : 1;
+
+  if (!pr.reviews.isReviewed(requiredApprovals)) {
     labels.add.push(config.labels['missing-review']);
-    err.push(`🔴 Review - Missing review from a member`);
+    err.push(
+      `🔴 Review - Missing review from a member (_**${requiredApprovals}** required_)`
+    );
+
+    if (pr.reviews.reviews.size > 0) {
+      message.push(
+        `🟢 Review - Reviewed by ${pr.reviews.reviews.forEach(
+          (_value, key, _map) => {
+            return `\`${key}\` `;
+          }
+        )}`
+      );
+    }
 
     if (pr.currentLabels.includes(config.labels['changes-requested'])) {
       removeLabel(
