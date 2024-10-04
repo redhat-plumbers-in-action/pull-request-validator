@@ -462,7 +462,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:11.3.3, @octokit/plugin-paginate-rest@npm:^11.0.0":
+"@octokit/plugin-paginate-rest@npm:11.3.5":
+  version: 11.3.5
+  resolution: "@octokit/plugin-paginate-rest@npm:11.3.5"
+  dependencies:
+    "@octokit/types": "npm:^13.6.0"
+  peerDependencies:
+    "@octokit/core": ">=6"
+  checksum: 10/daa911bb370818d8cd561a7d449d164cbad6e9e29c11c666054f1ecc19d2ea9fbdc9ef8c65f33a1102096eb671847d343ae57acbeb17185e64447741ffdfde3e
+  languageName: node
+  linkType: hard
+
+"@octokit/plugin-paginate-rest@npm:^11.0.0":
   version: 11.3.3
   resolution: "@octokit/plugin-paginate-rest@npm:11.3.3"
   dependencies:
@@ -515,15 +526,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-throttling@npm:9.3.1":
-  version: 9.3.1
-  resolution: "@octokit/plugin-throttling@npm:9.3.1"
+"@octokit/plugin-throttling@npm:9.3.2":
+  version: 9.3.2
+  resolution: "@octokit/plugin-throttling@npm:9.3.2"
   dependencies:
     "@octokit/types": "npm:^13.0.0"
     bottleneck: "npm:^2.15.3"
   peerDependencies:
     "@octokit/core": ^6.0.0
-  checksum: 10/5471a23547e3d326828bed89cd0f9c55625e68603a93daa5b7a1faea41013c47967cd53f44c3bf0433bcd78d1e99ea3595f2166a243db46d8ff6ce262380f34f
+  checksum: 10/1babc660a4e70b1a61bdefa0accd2a4eed8b6d029b7f8a4b655953c98c165fcdd1c5190bf242ee4d6808a636a9cf2bf6275dae4c487cf41e4521ee3b07c850c8
   languageName: node
   linkType: hard
 
@@ -583,12 +594,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/types@npm:13.5.1, @octokit/types@npm:^13.0.0, @octokit/types@npm:^13.1.0, @octokit/types@npm:^13.5.0":
-  version: 13.5.1
-  resolution: "@octokit/types@npm:13.5.1"
+"@octokit/types@npm:13.6.1, @octokit/types@npm:^13.6.0":
+  version: 13.6.1
+  resolution: "@octokit/types@npm:13.6.1"
   dependencies:
     "@octokit/openapi-types": "npm:^22.2.0"
-  checksum: 10/a2c06856dec1780c4a5561bfda9e717016a3c2a3f3a6427385a5aec2e428593c550d640079891276757934a50caee57b78c272ffa208b55027d4d964e2d1abb6
+  checksum: 10/9ea6189839439e1085799cc16ee699292538d9c14dd15e9e45462377287f863b6be93455d2ad9acffd561018a0c35adbb9d1437e92075c9058d6c6d69ff2f503
   languageName: node
   linkType: hard
 
@@ -598,6 +609,15 @@ __metadata:
   dependencies:
     "@octokit/openapi-types": "npm:^20.0.0"
   checksum: 10/19b77a8d25af2a5df4561f8750f807edfc9fca5b07cfa9fb21dce4665e1b188c966688f5ed5e08089404428100dfe44ad353f8d8532f1d30fe47e61c5faa1440
+  languageName: node
+  linkType: hard
+
+"@octokit/types@npm:^13.0.0, @octokit/types@npm:^13.1.0, @octokit/types@npm:^13.5.0":
+  version: 13.5.1
+  resolution: "@octokit/types@npm:13.5.1"
+  dependencies:
+    "@octokit/openapi-types": "npm:^22.2.0"
+  checksum: 10/a2c06856dec1780c4a5561bfda9e717016a3c2a3f3a6427385a5aec2e428593c550d640079891276757934a50caee57b78c272ffa208b55027d4d964e2d1abb6
   languageName: node
   linkType: hard
 
@@ -1899,10 +1919,10 @@ __metadata:
     "@actions/core": "npm:1.10.1"
     "@actions/github": "npm:6.0.0"
     "@octokit/core": "npm:6.1.2"
-    "@octokit/plugin-paginate-rest": "npm:11.3.3"
-    "@octokit/plugin-throttling": "npm:9.3.1"
+    "@octokit/plugin-paginate-rest": "npm:11.3.5"
+    "@octokit/plugin-throttling": "npm:9.3.2"
     "@octokit/rest": "npm:21.0.2"
-    "@octokit/types": "npm:13.5.1"
+    "@octokit/types": "npm:13.6.1"
     "@probot/octokit-plugin-config": "npm:3.0.2"
     "@total-typescript/ts-reset": "npm:0.6.1"
     "@types/node": "npm:20.16.9"
