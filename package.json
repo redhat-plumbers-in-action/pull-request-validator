@@ -39,7 +39,7 @@
   "devDependencies": {
     "@actions/github": "6.0.0",
     "@total-typescript/ts-reset": "0.6.1",
-    "@types/node": "20.16.9",
+    "@types/node": "20.16.15",
     "@vercel/ncc": "0.38.2",
     "@vitest/coverage-v8": "2.1.1",
     "prettier": "3.3.3",
