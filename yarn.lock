@@ -825,14 +825,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vercel/ncc@npm:0.38.2":
-  version: 0.38.2
-  resolution: "@vercel/ncc@npm:0.38.2"
+"@vercel/ncc@npm:0.38.3":
+  version: 0.38.3
+  resolution: "@vercel/ncc@npm:0.38.3"
   dependencies:
     node-gyp: "npm:latest"
   bin:
     ncc: dist/ncc/cli.js
-  checksum: 10/9a039147e379b7e5fc48e42b4ba1b5bdf4425db6de9de857b4a2bb7391805a7155e35c20d4da2159e09189b0ab62462900fcf09173a5b00886033c874bc47145
+  checksum: 10/f1a05a58e9c90d6940027b628590715a62bf1611c47bca546ad51bd6a0e8d25ce64c1c39eb27ba0b6747017182cb59ec42088da8d6530a6d561e9e1a4e8c9941
   languageName: node
   linkType: hard
 
@@ -1955,7 +1955,7 @@ __metadata:
     "@probot/octokit-plugin-config": "npm:3.0.2"
     "@total-typescript/ts-reset": "npm:0.6.1"
     "@types/node": "npm:22.8.6"
-    "@vercel/ncc": "npm:0.38.2"
+    "@vercel/ncc": "npm:0.38.3"
     "@vitest/coverage-v8": "npm:2.1.4"
     deepmerge: "npm:4.3.1"
     prettier: "npm:3.3.3"
