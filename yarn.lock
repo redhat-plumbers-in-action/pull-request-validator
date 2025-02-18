@@ -509,7 +509,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:11.4.2, @octokit/plugin-paginate-rest@npm:^11.4.2":
+"@octokit/plugin-paginate-rest@npm:^11.4.2":
   version: 11.4.2
   resolution: "@octokit/plugin-paginate-rest@npm:11.4.2"
   dependencies:
@@ -2046,7 +2046,6 @@ __metadata:
     "@actions/core": "npm:1.11.1"
     "@actions/github": "npm:6.0.0"
     "@octokit/core": "npm:6.1.4"
-    "@octokit/plugin-paginate-rest": "npm:11.4.2"
     "@octokit/plugin-throttling": "npm:9.4.0"
     "@octokit/rest": "npm:21.1.1"
     "@octokit/types": "npm:13.8.0"
