@@ -2117,7 +2117,7 @@ __export(dist_src_exports, {
   Octokit: () => Octokit
 });
 module.exports = __toCommonJS(dist_src_exports);
-var import_universal_user_agent = __nccwpck_require__(7900);
+var import_universal_user_agent = __nccwpck_require__(3843);
 var import_before_after_hook = __nccwpck_require__(2732);
 var import_request = __nccwpck_require__(8636);
 var import_graphql = __nccwpck_require__(7);
@@ -2290,7 +2290,7 @@ __export(dist_src_exports, {
 module.exports = __toCommonJS(dist_src_exports);
 
 // pkg/dist-src/version.js
-var VERSION = "9.2.1";
+var VERSION = "9.2.2";
 
 // pkg/dist-src/normalize-paginated-list-response.js
 function normalizePaginatedListResponse(response) {
@@ -2338,7 +2338,7 @@ function iterator(octokit, route, parameters) {
           const response = await requestMethod({ method, url, headers });
           const normalizedResponse = normalizePaginatedListResponse(response);
           url = ((normalizedResponse.headers.link || "").match(
-            /<([^>]+)>;\s*rel="next"/
+            /<([^<>]+)>;\s*rel="next"/
           ) || [])[1];
           return { value: normalizedResponse };
         } catch (error) {
@@ -4826,31 +4826,6 @@ legacyRestEndpointMethods.VERSION = VERSION;
 
 /***/ }),
 
-/***/ 7900:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-function getUserAgent() {
-  if (typeof navigator === "object" && "userAgent" in navigator) {
-    return navigator.userAgent;
-  }
-
-  if (typeof process === "object" && process.version !== undefined) {
-    return `Node.js/${process.version.substr(1)} (${process.platform}; ${process.arch})`;
-  }
-
-  return "<environment undetectable>";
-}
-
-exports.getUserAgent = getUserAgent;
-//# sourceMappingURL=index.js.map
-
-
-/***/ }),
-
 /***/ 4552:
 /***/ (function(__unused_webpack_module, exports) {
 
@@ -6305,10 +6280,10 @@ __export(dist_src_exports, {
 module.exports = __toCommonJS(dist_src_exports);
 
 // pkg/dist-src/defaults.js
-var import_universal_user_agent = __nccwpck_require__(5024);
+var import_universal_user_agent = __nccwpck_require__(3843);
 
 // pkg/dist-src/version.js
-var VERSION = "9.0.5";
+var VERSION = "9.0.6";
 
 // pkg/dist-src/defaults.js
 var userAgent = `octokit-endpoint.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
@@ -6413,9 +6388,9 @@ function addQueryParameters(url, parameters) {
 }
 
 // pkg/dist-src/util/extract-url-variable-names.js
-var urlVariableRegex = /\{[^}]+\}/g;
+var urlVariableRegex = /\{[^{}}]+\}/g;
 function removeNonChars(variableName) {
-  return variableName.replace(/^\W+|\W+$/g, "").split(/,/);
+  return variableName.replace(/(?:^\W+)|(?:(?<!\W)\W+$)/g, "").split(/,/);
 }
 function extractUrlVariableNames(url) {
   const matches = url.match(urlVariableRegex);
@@ -6601,7 +6576,7 @@ function parse(options) {
     }
     if (url.endsWith("/graphql")) {
       if (options.mediaType.previews?.length) {
-        const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
+        const previewsFromAcceptHeader = headers.accept.match(/(?<![\w-])[\w-]+(?=-preview)/g) || [];
         headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
           const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
           return `application/vnd.github.${preview}-preview${format}`;
@@ -6658,31 +6633,6 @@ var endpoint = withDefaults(null, DEFAULTS);
 
 /***/ }),
 
-/***/ 5024:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-function getUserAgent() {
-  if (typeof navigator === "object" && "userAgent" in navigator) {
-    return navigator.userAgent;
-  }
-
-  if (typeof process === "object" && process.version !== undefined) {
-    return `Node.js/${process.version.substr(1)} (${process.platform}; ${process.arch})`;
-  }
-
-  return "<environment undetectable>";
-}
-
-exports.getUserAgent = getUserAgent;
-//# sourceMappingURL=index.js.map
-
-
-/***/ }),
-
 /***/ 7:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -6706,18 +6656,18 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // pkg/dist-src/index.js
-var dist_src_exports = {};
-__export(dist_src_exports, {
+var index_exports = {};
+__export(index_exports, {
   GraphqlResponseError: () => GraphqlResponseError,
   graphql: () => graphql2,
   withCustomRequest: () => withCustomRequest
 });
-module.exports = __toCommonJS(dist_src_exports);
+module.exports = __toCommonJS(index_exports);
 var import_request3 = __nccwpck_require__(8636);
-var import_universal_user_agent = __nccwpck_require__(4768);
+var import_universal_user_agent = __nccwpck_require__(3843);
 
 // pkg/dist-src/version.js
-var VERSION = "7.1.0";
+var VERSION = "7.1.1";
 
 // pkg/dist-src/with-defaults.js
 var import_request2 = __nccwpck_require__(8636);
@@ -6765,8 +6715,7 @@ function graphql(request2, query, options) {
       );
     }
     for (const key in options) {
-      if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
-        continue;
+      if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key)) continue;
       return Promise.reject(
         new Error(
           `[@octokit/graphql] "${key}" cannot be used as variable name`
@@ -6840,27 +6789,99 @@ function withCustomRequest(customRequest) {
 
 /***/ }),
 
-/***/ 4768:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ 3708:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-function getUserAgent() {
-  if (typeof navigator === "object" && "userAgent" in navigator) {
-    return navigator.userAgent;
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
   }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  if (typeof process === "object" && process.version !== undefined) {
-    return `Node.js/${process.version.substr(1)} (${process.platform}; ${process.arch})`;
+// pkg/dist-src/index.js
+var dist_src_exports = {};
+__export(dist_src_exports, {
+  RequestError: () => RequestError
+});
+module.exports = __toCommonJS(dist_src_exports);
+var import_deprecation = __nccwpck_require__(4150);
+var import_once = __toESM(__nccwpck_require__(5560));
+var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
+var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
+var RequestError = class extends Error {
+  constructor(message, statusCode, options) {
+    super(message);
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
+    this.name = "HttpError";
+    this.status = statusCode;
+    let headers;
+    if ("headers" in options && typeof options.headers !== "undefined") {
+      headers = options.headers;
+    }
+    if ("response" in options) {
+      this.response = options.response;
+      headers = options.response.headers;
+    }
+    const requestCopy = Object.assign({}, options.request);
+    if (options.request.headers.authorization) {
+      requestCopy.headers = Object.assign({}, options.request.headers, {
+        authorization: options.request.headers.authorization.replace(
+          /(?<! ) .*$/,
+          " [REDACTED]"
+        )
+      });
+    }
+    requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
+    this.request = requestCopy;
+    Object.defineProperty(this, "code", {
+      get() {
+        logOnceCode(
+          new import_deprecation.Deprecation(
+            "[@octokit/request-error] `error.code` is deprecated, use `error.status`."
+          )
+        );
+        return statusCode;
+      }
+    });
+    Object.defineProperty(this, "headers", {
+      get() {
+        logOnceHeaders(
+          new import_deprecation.Deprecation(
+            "[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."
+          )
+        );
+        return headers || {};
+      }
+    });
   }
-
-  return "<environment undetectable>";
-}
-
-exports.getUserAgent = getUserAgent;
-//# sourceMappingURL=index.js.map
+};
+// Annotate the CommonJS export names for ESM import in node:
+0 && (0);
 
 
 /***/ }),
@@ -6894,10 +6915,10 @@ __export(dist_src_exports, {
 });
 module.exports = __toCommonJS(dist_src_exports);
 var import_endpoint = __nccwpck_require__(4471);
-var import_universal_user_agent = __nccwpck_require__(7480);
+var import_universal_user_agent = __nccwpck_require__(3843);
 
 // pkg/dist-src/version.js
-var VERSION = "8.4.0";
+var VERSION = "8.4.1";
 
 // pkg/dist-src/is-plain-object.js
 function isPlainObject(value) {
@@ -6913,7 +6934,7 @@ function isPlainObject(value) {
 }
 
 // pkg/dist-src/fetch-wrapper.js
-var import_request_error = __nccwpck_require__(4071);
+var import_request_error = __nccwpck_require__(3708);
 
 // pkg/dist-src/get-buffer-response.js
 function getBufferResponse(response) {
@@ -6956,7 +6977,7 @@ function fetchWrapper(requestOptions) {
       headers[keyAndValue[0]] = keyAndValue[1];
     }
     if ("deprecation" in headers) {
-      const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
+      const matches = headers.link && headers.link.match(/<([^<>]+)>; rel="deprecation"/);
       const deprecationLink = matches && matches.pop();
       log.warn(
         `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
@@ -7090,128 +7111,6 @@ var request = withDefaults(import_endpoint.endpoint, {
 });
 // Annotate the CommonJS export names for ESM import in node:
 0 && (0);
-
-
-/***/ }),
-
-/***/ 4071:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-// pkg/dist-src/index.js
-var dist_src_exports = {};
-__export(dist_src_exports, {
-  RequestError: () => RequestError
-});
-module.exports = __toCommonJS(dist_src_exports);
-var import_deprecation = __nccwpck_require__(4150);
-var import_once = __toESM(__nccwpck_require__(5560));
-var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
-var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
-var RequestError = class extends Error {
-  constructor(message, statusCode, options) {
-    super(message);
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
-    }
-    this.name = "HttpError";
-    this.status = statusCode;
-    let headers;
-    if ("headers" in options && typeof options.headers !== "undefined") {
-      headers = options.headers;
-    }
-    if ("response" in options) {
-      this.response = options.response;
-      headers = options.response.headers;
-    }
-    const requestCopy = Object.assign({}, options.request);
-    if (options.request.headers.authorization) {
-      requestCopy.headers = Object.assign({}, options.request.headers, {
-        authorization: options.request.headers.authorization.replace(
-          /(?<! ) .*$/,
-          " [REDACTED]"
-        )
-      });
-    }
-    requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
-    this.request = requestCopy;
-    Object.defineProperty(this, "code", {
-      get() {
-        logOnceCode(
-          new import_deprecation.Deprecation(
-            "[@octokit/request-error] `error.code` is deprecated, use `error.status`."
-          )
-        );
-        return statusCode;
-      }
-    });
-    Object.defineProperty(this, "headers", {
-      get() {
-        logOnceHeaders(
-          new import_deprecation.Deprecation(
-            "[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."
-          )
-        );
-        return headers || {};
-      }
-    });
-  }
-};
-// Annotate the CommonJS export names for ESM import in node:
-0 && (0);
-
-
-/***/ }),
-
-/***/ 7480:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-function getUserAgent() {
-  if (typeof navigator === "object" && "userAgent" in navigator) {
-    return navigator.userAgent;
-  }
-
-  if (typeof process === "object" && process.version !== undefined) {
-    return `Node.js/${process.version.substr(1)} (${process.platform}; ${process.arch})`;
-  }
-
-  return "<environment undetectable>";
-}
-
-exports.getUserAgent = getUserAgent;
-//# sourceMappingURL=index.js.map
 
 
 /***/ }),
@@ -31518,6 +31417,31 @@ module.exports = {
 
 /***/ }),
 
+/***/ 3843:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+function getUserAgent() {
+  if (typeof navigator === "object" && "userAgent" in navigator) {
+    return navigator.userAgent;
+  }
+
+  if (typeof process === "object" && process.version !== undefined) {
+    return `Node.js/${process.version.substr(1)} (${process.platform}; ${process.arch})`;
+  }
+
+  return "<environment undetectable>";
+}
+
+exports.getUserAgent = getUserAgent;
+//# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
 /***/ 8264:
 /***/ ((module) => {
 
@@ -31730,7 +31654,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_7__ = __nccwpck_require__(4383);
 /* harmony import */ var _action__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4225);
 /* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(1557);
-/* harmony import */ var _octokit__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(657);
+/* harmony import */ var _octokit__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(6905);
 /* harmony import */ var _pull_request__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(6456);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(4527);
 /* harmony import */ var _schema_input__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(2691);
@@ -31811,7 +31735,7 @@ __webpack_async_result__();
 
 /***/ }),
 
-/***/ 657:
+/***/ 6905:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -31822,7 +31746,7 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(7484);
-;// CONCATENATED MODULE: ./node_modules/universal-user-agent/index.js
+;// CONCATENATED MODULE: ./node_modules/@octokit/core/node_modules/universal-user-agent/index.js
 function getUserAgent() {
   if (typeof navigator === "object" && "userAgent" in navigator) {
     return navigator.userAgent;
@@ -31982,7 +31906,7 @@ function Collection() {
 
 /* harmony default export */ const before_after_hook = ({ Singular, Collection });
 
-;// CONCATENATED MODULE: ./node_modules/@octokit/core/node_modules/@octokit/request/node_modules/@octokit/endpoint/dist-bundle/index.js
+;// CONCATENATED MODULE: ./node_modules/@octokit/core/node_modules/@octokit/endpoint/dist-bundle/index.js
 // pkg/dist-src/defaults.js
 
 
@@ -32330,7 +32254,7 @@ var endpoint = withDefaults(null, DEFAULTS);
 
 // EXTERNAL MODULE: ./node_modules/fast-content-type-parse/index.js
 var fast_content_type_parse = __nccwpck_require__(1120);
-;// CONCATENATED MODULE: ./node_modules/@octokit/request-error/dist-src/index.js
+;// CONCATENATED MODULE: ./node_modules/@octokit/core/node_modules/@octokit/request-error/dist-src/index.js
 class RequestError extends Error {
   name;
   /**
@@ -32566,550 +32490,6 @@ function dist_bundle_withDefaults(oldEndpoint, newDefaults) {
 var request = dist_bundle_withDefaults(endpoint, defaults_default);
 
 
-;// CONCATENATED MODULE: ./node_modules/@octokit/core/node_modules/@octokit/endpoint/dist-bundle/index.js
-// pkg/dist-src/defaults.js
-
-
-// pkg/dist-src/version.js
-var endpoint_dist_bundle_VERSION = "0.0.0-development";
-
-// pkg/dist-src/defaults.js
-var dist_bundle_userAgent = `octokit-endpoint.js/${endpoint_dist_bundle_VERSION} ${getUserAgent()}`;
-var dist_bundle_DEFAULTS = {
-  method: "GET",
-  baseUrl: "https://api.github.com",
-  headers: {
-    accept: "application/vnd.github.v3+json",
-    "user-agent": dist_bundle_userAgent
-  },
-  mediaType: {
-    format: ""
-  }
-};
-
-// pkg/dist-src/util/lowercase-keys.js
-function dist_bundle_lowercaseKeys(object) {
-  if (!object) {
-    return {};
-  }
-  return Object.keys(object).reduce((newObj, key) => {
-    newObj[key.toLowerCase()] = object[key];
-    return newObj;
-  }, {});
-}
-
-// pkg/dist-src/util/is-plain-object.js
-function endpoint_dist_bundle_isPlainObject(value) {
-  if (typeof value !== "object" || value === null)
-    return false;
-  if (Object.prototype.toString.call(value) !== "[object Object]")
-    return false;
-  const proto = Object.getPrototypeOf(value);
-  if (proto === null)
-    return true;
-  const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
-  return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
-}
-
-// pkg/dist-src/util/merge-deep.js
-function dist_bundle_mergeDeep(defaults, options) {
-  const result = Object.assign({}, defaults);
-  Object.keys(options).forEach((key) => {
-    if (endpoint_dist_bundle_isPlainObject(options[key])) {
-      if (!(key in defaults))
-        Object.assign(result, { [key]: options[key] });
-      else
-        result[key] = dist_bundle_mergeDeep(defaults[key], options[key]);
-    } else {
-      Object.assign(result, { [key]: options[key] });
-    }
-  });
-  return result;
-}
-
-// pkg/dist-src/util/remove-undefined-properties.js
-function dist_bundle_removeUndefinedProperties(obj) {
-  for (const key in obj) {
-    if (obj[key] === void 0) {
-      delete obj[key];
-    }
-  }
-  return obj;
-}
-
-// pkg/dist-src/merge.js
-function dist_bundle_merge(defaults, route, options) {
-  if (typeof route === "string") {
-    let [method, url] = route.split(" ");
-    options = Object.assign(url ? { method, url } : { url: method }, options);
-  } else {
-    options = Object.assign({}, route);
-  }
-  options.headers = dist_bundle_lowercaseKeys(options.headers);
-  dist_bundle_removeUndefinedProperties(options);
-  dist_bundle_removeUndefinedProperties(options.headers);
-  const mergedOptions = dist_bundle_mergeDeep(defaults || {}, options);
-  if (options.url === "/graphql") {
-    if (defaults && defaults.mediaType.previews?.length) {
-      mergedOptions.mediaType.previews = defaults.mediaType.previews.filter(
-        (preview) => !mergedOptions.mediaType.previews.includes(preview)
-      ).concat(mergedOptions.mediaType.previews);
-    }
-    mergedOptions.mediaType.previews = (mergedOptions.mediaType.previews || []).map((preview) => preview.replace(/-preview/, ""));
-  }
-  return mergedOptions;
-}
-
-// pkg/dist-src/util/add-query-parameters.js
-function dist_bundle_addQueryParameters(url, parameters) {
-  const separator = /\?/.test(url) ? "&" : "?";
-  const names = Object.keys(parameters);
-  if (names.length === 0) {
-    return url;
-  }
-  return url + separator + names.map((name) => {
-    if (name === "q") {
-      return "q=" + parameters.q.split("+").map(encodeURIComponent).join("+");
-    }
-    return `${name}=${encodeURIComponent(parameters[name])}`;
-  }).join("&");
-}
-
-// pkg/dist-src/util/extract-url-variable-names.js
-var dist_bundle_urlVariableRegex = /\{[^}]+\}/g;
-function dist_bundle_removeNonChars(variableName) {
-  return variableName.replace(/^\W+|\W+$/g, "").split(/,/);
-}
-function dist_bundle_extractUrlVariableNames(url) {
-  const matches = url.match(dist_bundle_urlVariableRegex);
-  if (!matches) {
-    return [];
-  }
-  return matches.map(dist_bundle_removeNonChars).reduce((a, b) => a.concat(b), []);
-}
-
-// pkg/dist-src/util/omit.js
-function dist_bundle_omit(object, keysToOmit) {
-  const result = { __proto__: null };
-  for (const key of Object.keys(object)) {
-    if (keysToOmit.indexOf(key) === -1) {
-      result[key] = object[key];
-    }
-  }
-  return result;
-}
-
-// pkg/dist-src/util/url-template.js
-function dist_bundle_encodeReserved(str) {
-  return str.split(/(%[0-9A-Fa-f]{2})/g).map(function(part) {
-    if (!/%[0-9A-Fa-f]/.test(part)) {
-      part = encodeURI(part).replace(/%5B/g, "[").replace(/%5D/g, "]");
-    }
-    return part;
-  }).join("");
-}
-function dist_bundle_encodeUnreserved(str) {
-  return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
-    return "%" + c.charCodeAt(0).toString(16).toUpperCase();
-  });
-}
-function dist_bundle_encodeValue(operator, value, key) {
-  value = operator === "+" || operator === "#" ? dist_bundle_encodeReserved(value) : dist_bundle_encodeUnreserved(value);
-  if (key) {
-    return dist_bundle_encodeUnreserved(key) + "=" + value;
-  } else {
-    return value;
-  }
-}
-function dist_bundle_isDefined(value) {
-  return value !== void 0 && value !== null;
-}
-function dist_bundle_isKeyOperator(operator) {
-  return operator === ";" || operator === "&" || operator === "?";
-}
-function dist_bundle_getValues(context, operator, key, modifier) {
-  var value = context[key], result = [];
-  if (dist_bundle_isDefined(value) && value !== "") {
-    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-      value = value.toString();
-      if (modifier && modifier !== "*") {
-        value = value.substring(0, parseInt(modifier, 10));
-      }
-      result.push(
-        dist_bundle_encodeValue(operator, value, dist_bundle_isKeyOperator(operator) ? key : "")
-      );
-    } else {
-      if (modifier === "*") {
-        if (Array.isArray(value)) {
-          value.filter(dist_bundle_isDefined).forEach(function(value2) {
-            result.push(
-              dist_bundle_encodeValue(operator, value2, dist_bundle_isKeyOperator(operator) ? key : "")
-            );
-          });
-        } else {
-          Object.keys(value).forEach(function(k) {
-            if (dist_bundle_isDefined(value[k])) {
-              result.push(dist_bundle_encodeValue(operator, value[k], k));
-            }
-          });
-        }
-      } else {
-        const tmp = [];
-        if (Array.isArray(value)) {
-          value.filter(dist_bundle_isDefined).forEach(function(value2) {
-            tmp.push(dist_bundle_encodeValue(operator, value2));
-          });
-        } else {
-          Object.keys(value).forEach(function(k) {
-            if (dist_bundle_isDefined(value[k])) {
-              tmp.push(dist_bundle_encodeUnreserved(k));
-              tmp.push(dist_bundle_encodeValue(operator, value[k].toString()));
-            }
-          });
-        }
-        if (dist_bundle_isKeyOperator(operator)) {
-          result.push(dist_bundle_encodeUnreserved(key) + "=" + tmp.join(","));
-        } else if (tmp.length !== 0) {
-          result.push(tmp.join(","));
-        }
-      }
-    }
-  } else {
-    if (operator === ";") {
-      if (dist_bundle_isDefined(value)) {
-        result.push(dist_bundle_encodeUnreserved(key));
-      }
-    } else if (value === "" && (operator === "&" || operator === "?")) {
-      result.push(dist_bundle_encodeUnreserved(key) + "=");
-    } else if (value === "") {
-      result.push("");
-    }
-  }
-  return result;
-}
-function dist_bundle_parseUrl(template) {
-  return {
-    expand: dist_bundle_expand.bind(null, template)
-  };
-}
-function dist_bundle_expand(template, context) {
-  var operators = ["+", "#", ".", "/", ";", "?", "&"];
-  template = template.replace(
-    /\{([^\{\}]+)\}|([^\{\}]+)/g,
-    function(_, expression, literal) {
-      if (expression) {
-        let operator = "";
-        const values = [];
-        if (operators.indexOf(expression.charAt(0)) !== -1) {
-          operator = expression.charAt(0);
-          expression = expression.substr(1);
-        }
-        expression.split(/,/g).forEach(function(variable) {
-          var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-          values.push(dist_bundle_getValues(context, operator, tmp[1], tmp[2] || tmp[3]));
-        });
-        if (operator && operator !== "+") {
-          var separator = ",";
-          if (operator === "?") {
-            separator = "&";
-          } else if (operator !== "#") {
-            separator = operator;
-          }
-          return (values.length !== 0 ? operator : "") + values.join(separator);
-        } else {
-          return values.join(",");
-        }
-      } else {
-        return dist_bundle_encodeReserved(literal);
-      }
-    }
-  );
-  if (template === "/") {
-    return template;
-  } else {
-    return template.replace(/\/$/, "");
-  }
-}
-
-// pkg/dist-src/parse.js
-function dist_bundle_parse(options) {
-  let method = options.method.toUpperCase();
-  let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
-  let headers = Object.assign({}, options.headers);
-  let body;
-  let parameters = dist_bundle_omit(options, [
-    "method",
-    "baseUrl",
-    "url",
-    "headers",
-    "request",
-    "mediaType"
-  ]);
-  const urlVariableNames = dist_bundle_extractUrlVariableNames(url);
-  url = dist_bundle_parseUrl(url).expand(parameters);
-  if (!/^http/.test(url)) {
-    url = options.baseUrl + url;
-  }
-  const omittedParameters = Object.keys(options).filter((option) => urlVariableNames.includes(option)).concat("baseUrl");
-  const remainingParameters = dist_bundle_omit(parameters, omittedParameters);
-  const isBinaryRequest = /application\/octet-stream/i.test(headers.accept);
-  if (!isBinaryRequest) {
-    if (options.mediaType.format) {
-      headers.accept = headers.accept.split(/,/).map(
-        (format) => format.replace(
-          /application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/,
-          `application/vnd$1$2.${options.mediaType.format}`
-        )
-      ).join(",");
-    }
-    if (url.endsWith("/graphql")) {
-      if (options.mediaType.previews?.length) {
-        const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
-        headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
-          const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
-          return `application/vnd.github.${preview}-preview${format}`;
-        }).join(",");
-      }
-    }
-  }
-  if (["GET", "HEAD"].includes(method)) {
-    url = dist_bundle_addQueryParameters(url, remainingParameters);
-  } else {
-    if ("data" in remainingParameters) {
-      body = remainingParameters.data;
-    } else {
-      if (Object.keys(remainingParameters).length) {
-        body = remainingParameters;
-      }
-    }
-  }
-  if (!headers["content-type"] && typeof body !== "undefined") {
-    headers["content-type"] = "application/json; charset=utf-8";
-  }
-  if (["PATCH", "PUT"].includes(method) && typeof body === "undefined") {
-    body = "";
-  }
-  return Object.assign(
-    { method, url, headers },
-    typeof body !== "undefined" ? { body } : null,
-    options.request ? { request: options.request } : null
-  );
-}
-
-// pkg/dist-src/endpoint-with-defaults.js
-function dist_bundle_endpointWithDefaults(defaults, route, options) {
-  return dist_bundle_parse(dist_bundle_merge(defaults, route, options));
-}
-
-// pkg/dist-src/with-defaults.js
-function endpoint_dist_bundle_withDefaults(oldDefaults, newDefaults) {
-  const DEFAULTS2 = dist_bundle_merge(oldDefaults, newDefaults);
-  const endpoint2 = dist_bundle_endpointWithDefaults.bind(null, DEFAULTS2);
-  return Object.assign(endpoint2, {
-    DEFAULTS: DEFAULTS2,
-    defaults: endpoint_dist_bundle_withDefaults.bind(null, DEFAULTS2),
-    merge: dist_bundle_merge.bind(null, DEFAULTS2),
-    parse: dist_bundle_parse
-  });
-}
-
-// pkg/dist-src/index.js
-var dist_bundle_endpoint = endpoint_dist_bundle_withDefaults(null, dist_bundle_DEFAULTS);
-
-
-;// CONCATENATED MODULE: ./node_modules/@octokit/core/node_modules/@octokit/graphql/node_modules/@octokit/request/dist-bundle/index.js
-// pkg/dist-src/index.js
-
-
-// pkg/dist-src/defaults.js
-
-
-// pkg/dist-src/version.js
-var request_dist_bundle_VERSION = "0.0.0-development";
-
-// pkg/dist-src/defaults.js
-var dist_bundle_defaults_default = {
-  headers: {
-    "user-agent": `octokit-request.js/${request_dist_bundle_VERSION} ${getUserAgent()}`
-  }
-};
-
-// pkg/dist-src/fetch-wrapper.js
-
-
-// pkg/dist-src/is-plain-object.js
-function request_dist_bundle_isPlainObject(value) {
-  if (typeof value !== "object" || value === null) return false;
-  if (Object.prototype.toString.call(value) !== "[object Object]") return false;
-  const proto = Object.getPrototypeOf(value);
-  if (proto === null) return true;
-  const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
-  return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
-}
-
-// pkg/dist-src/fetch-wrapper.js
-
-async function dist_bundle_fetchWrapper(requestOptions) {
-  const fetch = requestOptions.request?.fetch || globalThis.fetch;
-  if (!fetch) {
-    throw new Error(
-      "fetch is not set. Please pass a fetch implementation as new Octokit({ request: { fetch }}). Learn more at https://github.com/octokit/octokit.js/#fetch-missing"
-    );
-  }
-  const log = requestOptions.request?.log || console;
-  const parseSuccessResponseBody = requestOptions.request?.parseSuccessResponseBody !== false;
-  const body = request_dist_bundle_isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body) ? JSON.stringify(requestOptions.body) : requestOptions.body;
-  const requestHeaders = Object.fromEntries(
-    Object.entries(requestOptions.headers).map(([name, value]) => [
-      name,
-      String(value)
-    ])
-  );
-  let fetchResponse;
-  try {
-    fetchResponse = await fetch(requestOptions.url, {
-      method: requestOptions.method,
-      body,
-      redirect: requestOptions.request?.redirect,
-      headers: requestHeaders,
-      signal: requestOptions.request?.signal,
-      // duplex must be set if request.body is ReadableStream or Async Iterables.
-      // See https://fetch.spec.whatwg.org/#dom-requestinit-duplex.
-      ...requestOptions.body && { duplex: "half" }
-    });
-  } catch (error) {
-    let message = "Unknown Error";
-    if (error instanceof Error) {
-      if (error.name === "AbortError") {
-        error.status = 500;
-        throw error;
-      }
-      message = error.message;
-      if (error.name === "TypeError" && "cause" in error) {
-        if (error.cause instanceof Error) {
-          message = error.cause.message;
-        } else if (typeof error.cause === "string") {
-          message = error.cause;
-        }
-      }
-    }
-    const requestError = new RequestError(message, 500, {
-      request: requestOptions
-    });
-    requestError.cause = error;
-    throw requestError;
-  }
-  const status = fetchResponse.status;
-  const url = fetchResponse.url;
-  const responseHeaders = {};
-  for (const [key, value] of fetchResponse.headers) {
-    responseHeaders[key] = value;
-  }
-  const octokitResponse = {
-    url,
-    status,
-    headers: responseHeaders,
-    data: ""
-  };
-  if ("deprecation" in responseHeaders) {
-    const matches = responseHeaders.link && responseHeaders.link.match(/<([^>]+)>; rel="deprecation"/);
-    const deprecationLink = matches && matches.pop();
-    log.warn(
-      `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${responseHeaders.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
-    );
-  }
-  if (status === 204 || status === 205) {
-    return octokitResponse;
-  }
-  if (requestOptions.method === "HEAD") {
-    if (status < 400) {
-      return octokitResponse;
-    }
-    throw new RequestError(fetchResponse.statusText, status, {
-      response: octokitResponse,
-      request: requestOptions
-    });
-  }
-  if (status === 304) {
-    octokitResponse.data = await dist_bundle_getResponseData(fetchResponse);
-    throw new RequestError("Not modified", status, {
-      response: octokitResponse,
-      request: requestOptions
-    });
-  }
-  if (status >= 400) {
-    octokitResponse.data = await dist_bundle_getResponseData(fetchResponse);
-    throw new RequestError(dist_bundle_toErrorMessage(octokitResponse.data), status, {
-      response: octokitResponse,
-      request: requestOptions
-    });
-  }
-  octokitResponse.data = parseSuccessResponseBody ? await dist_bundle_getResponseData(fetchResponse) : fetchResponse.body;
-  return octokitResponse;
-}
-async function dist_bundle_getResponseData(response) {
-  const contentType = response.headers.get("content-type");
-  if (!contentType) {
-    return response.text().catch(() => "");
-  }
-  const mimetype = (0,fast_content_type_parse/* safeParse */.xL)(contentType);
-  if (mimetype.type === "application/json") {
-    let text = "";
-    try {
-      text = await response.text();
-      return JSON.parse(text);
-    } catch (err) {
-      return text;
-    }
-  } else if (mimetype.type.startsWith("text/") || mimetype.parameters.charset?.toLowerCase() === "utf-8") {
-    return response.text().catch(() => "");
-  } else {
-    return response.arrayBuffer().catch(() => new ArrayBuffer(0));
-  }
-}
-function dist_bundle_toErrorMessage(data) {
-  if (typeof data === "string") {
-    return data;
-  }
-  if (data instanceof ArrayBuffer) {
-    return "Unknown error";
-  }
-  if ("message" in data) {
-    const suffix = "documentation_url" in data ? ` - ${data.documentation_url}` : "";
-    return Array.isArray(data.errors) ? `${data.message}: ${data.errors.map((v) => JSON.stringify(v)).join(", ")}${suffix}` : `${data.message}${suffix}`;
-  }
-  return `Unknown error: ${JSON.stringify(data)}`;
-}
-
-// pkg/dist-src/with-defaults.js
-function request_dist_bundle_withDefaults(oldEndpoint, newDefaults) {
-  const endpoint2 = oldEndpoint.defaults(newDefaults);
-  const newApi = function(route, parameters) {
-    const endpointOptions = endpoint2.merge(route, parameters);
-    if (!endpointOptions.request || !endpointOptions.request.hook) {
-      return dist_bundle_fetchWrapper(endpoint2.parse(endpointOptions));
-    }
-    const request2 = (route2, parameters2) => {
-      return dist_bundle_fetchWrapper(
-        endpoint2.parse(endpoint2.merge(route2, parameters2))
-      );
-    };
-    Object.assign(request2, {
-      endpoint: endpoint2,
-      defaults: request_dist_bundle_withDefaults.bind(null, endpoint2)
-    });
-    return endpointOptions.request.hook(request2, endpointOptions);
-  };
-  return Object.assign(newApi, {
-    endpoint: endpoint2,
-    defaults: request_dist_bundle_withDefaults.bind(null, endpoint2)
-  });
-}
-
-// pkg/dist-src/index.js
-var dist_bundle_request = request_dist_bundle_withDefaults(dist_bundle_endpoint, dist_bundle_defaults_default);
-
-
 ;// CONCATENATED MODULE: ./node_modules/@octokit/core/node_modules/@octokit/graphql/dist-bundle/index.js
 // pkg/dist-src/index.js
 
@@ -33154,7 +32534,8 @@ var NON_VARIABLE_OPTIONS = [
   "headers",
   "request",
   "query",
-  "mediaType"
+  "mediaType",
+  "operationName"
 ];
 var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
 var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
@@ -33221,7 +32602,7 @@ function graphql_dist_bundle_withDefaults(request2, newDefaults) {
 }
 
 // pkg/dist-src/index.js
-var graphql2 = graphql_dist_bundle_withDefaults(dist_bundle_request, {
+var graphql2 = graphql_dist_bundle_withDefaults(request, {
   headers: {
     "user-agent": `octokit-graphql.js/${graphql_dist_bundle_VERSION} ${getUserAgent()}`
   },
@@ -33237,14 +32618,17 @@ function withCustomRequest(customRequest) {
 
 
 ;// CONCATENATED MODULE: ./node_modules/@octokit/core/node_modules/@octokit/auth-token/dist-bundle/index.js
+// pkg/dist-src/is-jwt.js
+var b64url = "(?:[a-zA-Z0-9_-]+)";
+var sep = "\\.";
+var jwtRE = new RegExp(`^${b64url}${sep}${b64url}${sep}${b64url}$`);
+var isJWT = jwtRE.test.bind(jwtRE);
+
 // pkg/dist-src/auth.js
-var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
-var REGEX_IS_INSTALLATION = /^ghs_/;
-var REGEX_IS_USER_TO_SERVER = /^ghu_/;
 async function auth(token) {
-  const isApp = token.split(/\./).length === 3;
-  const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token) || REGEX_IS_INSTALLATION.test(token);
-  const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token);
+  const isApp = isJWT(token);
+  const isInstallation = token.startsWith("v1.") || token.startsWith("ghs_");
+  const isUserToServer = token.startsWith("ghu_");
   const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
   return {
     type: "token",
