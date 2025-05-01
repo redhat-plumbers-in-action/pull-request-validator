@@ -27,11 +27,11 @@
   "packageManager": "yarn@4.6.0",
   "dependencies": {
     "@actions/core": "1.11.1",
-    "@octokit/core": "6.1.4",
-    "@octokit/plugin-paginate-rest": "11.4.3",
-    "@octokit/plugin-throttling": "9.4.0",
+    "@octokit/core": "6.1.5",
+    "@octokit/plugin-paginate-rest": "11.6.0",
+    "@octokit/plugin-throttling": "9.6.1",
     "@octokit/rest": "21.1.1",
-    "@octokit/types": "13.8.0",
+    "@octokit/types": "13.10.0",
     "@probot/octokit-plugin-config": "3.0.2",
     "deepmerge": "4.3.1",
     "zod": "3.24.2"
