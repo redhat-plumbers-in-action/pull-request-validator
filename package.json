@@ -34,7 +34,7 @@
     "@octokit/types": "13.8.0",
     "@probot/octokit-plugin-config": "3.0.2",
     "deepmerge": "4.3.1",
-    "zod": "3.24.2"
+    "zod": "3.25.64"
   },
   "devDependencies": {
     "@actions/github": "6.0.0",
