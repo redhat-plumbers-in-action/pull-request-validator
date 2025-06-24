@@ -54,4 +54,9 @@ export async function removeLabel(octokit, owner, repo, issueNumber, label) {
 export function raise(error) {
     throw new ValidationError(error);
 }
+export function makeList(items) {
+    if (items.length === 0)
+        return '';
+    return items.map(item => `* ${item}`).join('\n');
+}
 //# sourceMappingURL=util.js.map

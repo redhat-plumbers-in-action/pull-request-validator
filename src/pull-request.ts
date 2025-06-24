@@ -2,6 +2,7 @@ import { debug } from '@actions/core';
 import { z } from 'zod';
 
 import { CustomOctokit } from './octokit';
+import { makeList } from './util';
 
 import {
   CheckRuns,
@@ -76,8 +77,8 @@ export class PullRequest {
     } else {
       checkRunsSuccess = false;
       const failedChecks = this.isFailedOrPending(checkRuns);
-      message += `Failed or pending checks - ${failedChecks.failed.concat(
-        failedChecks.pending
+      message += `Failed or pending checks - ${makeList(
+        failedChecks.failed.concat(failedChecks.pending)
       )}`;
     }
 
@@ -92,9 +93,11 @@ export class PullRequest {
       statusSuccess = false;
       const failedStatuses = this.isFailedOrPendingStatuses(status.statuses);
       message.length > 0 && (message += '\t');
-      message += `Failed or pending statuses - ${failedStatuses.error.concat(
-        failedStatuses.failed,
-        failedStatuses.pending
+      message += `Failed or pending statuses - ${makeList(
+        failedStatuses.error.concat(
+          failedStatuses.failed,
+          failedStatuses.pending
+        )
       )}`;
     }
 

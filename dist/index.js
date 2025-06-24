@@ -37524,6 +37524,8 @@ __nccwpck_require__.d(__webpack_exports__, {
 var core = __nccwpck_require__(7484);
 // EXTERNAL MODULE: ./node_modules/zod/dist/esm/index.js + 9 modules
 var esm = __nccwpck_require__(2204);
+// EXTERNAL MODULE: ./src/util.ts
+var util = __nccwpck_require__(4527);
 ;// CONCATENATED MODULE: ./src/schema/pull-request.ts
 
 const pullRequestApiSchema = esm.z.object({
@@ -37673,6 +37675,7 @@ class PullRequestReviews {
 
 
 
+
 class PullRequest {
     constructor(number, ref, owner, repo, octokit) {
         this.number = number;
@@ -37714,7 +37717,7 @@ class PullRequest {
         else {
             checkRunsSuccess = false;
             const failedChecks = this.isFailedOrPending(checkRuns);
-            message += `Failed or pending checks - ${failedChecks.failed.concat(failedChecks.pending)}`;
+            message += `Failed or pending checks - ${(0,util/* makeList */.tR)(failedChecks.failed.concat(failedChecks.pending))}`;
         }
         (0,core.debug)(`Checking CI status for ${status.total_count} statuses`);
         if (status.state === 'success') {
@@ -37729,7 +37732,7 @@ class PullRequest {
             statusSuccess = false;
             const failedStatuses = this.isFailedOrPendingStatuses(status.statuses);
             message.length > 0 && (message += '\t');
-            message += `Failed or pending statuses - ${failedStatuses.error.concat(failedStatuses.failed, failedStatuses.pending)}`;
+            message += `Failed or pending statuses - ${(0,util/* makeList */.tR)(failedStatuses.error.concat(failedStatuses.failed, failedStatuses.pending))}`;
         }
         return { result: checkRunsSuccess && statusSuccess, message };
     }
@@ -37812,6 +37815,7 @@ const pullRequestMetadataSchema = zod__WEBPACK_IMPORTED_MODULE_0__.z.object({
 /* harmony export */   Ie: () => (/* binding */ updateStatusCheck),
 /* harmony export */   q0: () => (/* binding */ setLabels),
 /* harmony export */   tA: () => (/* binding */ removeLabel),
+/* harmony export */   tR: () => (/* binding */ makeList),
 /* harmony export */   vD: () => (/* binding */ getSuccessMessage),
 /* harmony export */   xl: () => (/* binding */ raise),
 /* harmony export */   zd: () => (/* binding */ getFailedMessage)
@@ -37874,6 +37878,11 @@ async function removeLabel(octokit, owner, repo, issueNumber, label) {
 }
 function raise(error) {
     throw new _error__WEBPACK_IMPORTED_MODULE_1__/* .ValidationError */ .y(error);
+}
+function makeList(items) {
+    if (items.length === 0)
+        return '';
+    return items.map(item => `* ${item}`).join('\n');
 }
 
 

@@ -95,3 +95,9 @@ export async function removeLabel(
 export function raise(error: string): never {
   throw new ValidationError(error);
 }
+
+export function makeList(items: string[]): string {
+  if (items.length === 0) return '';
+
+  return items.map(item => `* ${item}`).join('\n');
+}
