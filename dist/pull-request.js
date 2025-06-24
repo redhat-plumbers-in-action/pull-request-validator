@@ -1,5 +1,6 @@
 import { debug } from '@actions/core';
 import { z } from 'zod';
+import { makeList } from './util';
 import { checkRunsSchema, pullRequestApiSchema, statusSchema, } from './schema/pull-request';
 import { PullRequestReviews } from './reviews/pull-request-reviews';
 export class PullRequest {
@@ -44,7 +45,7 @@ export class PullRequest {
         else {
             checkRunsSuccess = false;
             const failedChecks = this.isFailedOrPending(checkRuns);
-            message += `Failed or pending checks - ${failedChecks.failed.concat(failedChecks.pending)}`;
+            message += `Failed or pending checks - ${makeList(failedChecks.failed.concat(failedChecks.pending))}`;
         }
         debug(`Checking CI status for ${status.total_count} statuses`);
         if (status.state === 'success') {
@@ -59,7 +60,7 @@ export class PullRequest {
             statusSuccess = false;
             const failedStatuses = this.isFailedOrPendingStatuses(status.statuses);
             message.length > 0 && (message += '\t');
-            message += `Failed or pending statuses - ${failedStatuses.error.concat(failedStatuses.failed, failedStatuses.pending)}`;
+            message += `Failed or pending statuses - ${makeList(failedStatuses.error.concat(failedStatuses.failed, failedStatuses.pending))}`;
         }
         return { result: checkRunsSuccess && statusSuccess, message };
     }

@@ -6,3 +6,4 @@ export declare function getSuccessMessage(message: string[]): string;
 export declare function setLabels(octokit: Octokit, owner: string, repo: string, issueNumber: number, labels: string[]): Promise<void>;
 export declare function removeLabel(octokit: Octokit, owner: string, repo: string, issueNumber: number, label: string): Promise<void>;
 export declare function raise(error: string): never;
+export declare function makeList(items: string[]): string;

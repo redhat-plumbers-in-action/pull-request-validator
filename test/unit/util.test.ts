@@ -1,6 +1,11 @@
 import { describe, expect, test } from 'vitest';
 
-import { getFailedMessage, getSuccessMessage, raise } from '../../src/util';
+import {
+  getFailedMessage,
+  getSuccessMessage,
+  makeList,
+  raise,
+} from '../../src/util';
 
 describe('Test Util functions', () => {
   test('getFailedMessage()', () => {
@@ -27,4 +32,16 @@ describe('Test Util functions', () => {
 
   test('raise()', () =>
     expect(() => raise('test error')).toThrowError('test error'));
+
+  test('makeList()', () => {
+    let list = ['item1', 'item2', 'item3'];
+    expect(makeList(list)).toMatchInlineSnapshot(`
+      "* item1
+      * item2
+      * item3"
+    `);
+
+    list = [];
+    expect(makeList(list)).toBe('');
+  });
 });
