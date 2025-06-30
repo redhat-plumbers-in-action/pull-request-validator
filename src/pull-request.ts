@@ -79,7 +79,7 @@ export class PullRequest {
       const failedChecks = this.isFailedOrPending(checkRuns);
       message += `Failed or pending checks:\n${makeList(
         failedChecks.failed.concat(failedChecks.pending)
-      )}`;
+      )}\n`;
     }
 
     debug(`Checking CI status for ${status.total_count} statuses`);
@@ -98,7 +98,7 @@ export class PullRequest {
           failedStatuses.failed,
           failedStatuses.pending
         )
-      )}`;
+      )}\n`;
     }
 
     return { result: checkRunsSuccess && statusSuccess, message };
