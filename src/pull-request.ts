@@ -77,7 +77,7 @@ export class PullRequest {
     } else {
       checkRunsSuccess = false;
       const failedChecks = this.isFailedOrPending(checkRuns);
-      message += `Failed or pending checks - ${makeList(
+      message += `Failed or pending checks:\n${makeList(
         failedChecks.failed.concat(failedChecks.pending)
       )}`;
     }
@@ -93,7 +93,7 @@ export class PullRequest {
       statusSuccess = false;
       const failedStatuses = this.isFailedOrPendingStatuses(status.statuses);
       message.length > 0 && (message += '\t');
-      message += `Failed or pending statuses - ${makeList(
+      message += `Failed or pending statuses:\n${makeList(
         failedStatuses.error.concat(
           failedStatuses.failed,
           failedStatuses.pending
