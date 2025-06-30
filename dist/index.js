@@ -37732,7 +37732,7 @@ class PullRequest {
         else {
             checkRunsSuccess = false;
             const failedChecks = this.isFailedOrPending(checkRuns);
-            message += `Failed or pending checks:\n${(0,util/* makeList */.tR)(failedChecks.failed.concat(failedChecks.pending))}`;
+            message += `Failed or pending checks:\n${(0,util/* makeList */.tR)(failedChecks.failed.concat(failedChecks.pending))}\n`;
         }
         (0,core.debug)(`Checking CI status for ${status.total_count} statuses`);
         if (status.state === 'success') {
@@ -37747,7 +37747,7 @@ class PullRequest {
             statusSuccess = false;
             const failedStatuses = this.isFailedOrPendingStatuses(status.statuses);
             message.length > 0 && (message += '\t');
-            message += `Failed or pending statuses:\n${(0,util/* makeList */.tR)(failedStatuses.error.concat(failedStatuses.failed, failedStatuses.pending))}`;
+            message += `Failed or pending statuses:\n${(0,util/* makeList */.tR)(failedStatuses.error.concat(failedStatuses.failed, failedStatuses.pending))}\n`;
         }
         return { result: checkRunsSuccess && statusSuccess, message };
     }
