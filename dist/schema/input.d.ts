@@ -1,19 +1,11 @@
 import { z } from 'zod';
 export declare const singleCommitMetadataSchema: z.ZodObject<{
     sha: z.ZodString;
-}, "strip", z.ZodTypeAny, {
-    sha: string;
-}, {
-    sha: string;
-}>;
+}, z.core.$strip>;
 export type SingleCommitMetadata = z.infer<typeof singleCommitMetadataSchema>;
 export declare const commitMetadataSchema: z.ZodArray<z.ZodObject<{
     sha: z.ZodString;
-}, "strip", z.ZodTypeAny, {
-    sha: string;
-}, {
-    sha: string;
-}>, "many">;
+}, z.core.$strip>>;
 export type CommitMetadata = z.infer<typeof commitMetadataSchema>;
 export declare const pullRequestMetadataSchema: z.ZodObject<{
     number: z.ZodNumber;
@@ -21,24 +13,6 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
     url: z.ZodString;
     commits: z.ZodArray<z.ZodObject<{
         sha: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
-        sha: string;
-    }, {
-        sha: string;
-    }>, "many">;
-}, "strip", z.ZodTypeAny, {
-    number: number;
-    base: string;
-    url: string;
-    commits: {
-        sha: string;
-    }[];
-}, {
-    number: number;
-    base: string;
-    url: string;
-    commits: {
-        sha: string;
-    }[];
-}>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
 export type PullRequestMetadata = z.infer<typeof pullRequestMetadataSchema>;

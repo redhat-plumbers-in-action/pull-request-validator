@@ -3,156 +3,54 @@ export declare const pullRequestApiSchema: z.ZodObject<{
     number: z.ZodNumber;
     base: z.ZodString;
     url: z.ZodString;
-    labels: z.ZodArray<z.ZodEffects<z.ZodObject<{
+    labels: z.ZodArray<z.ZodPipe<z.ZodObject<{
         name: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
+    }, z.core.$strip>, z.ZodTransform<string, {
         name: string;
-    }, {
-        name: string;
-    }>, string, {
-        name: string;
-    }>, "many">;
+    }>>>;
     commits: z.ZodArray<z.ZodObject<{
         sha: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
-        sha: string;
-    }, {
-        sha: string;
-    }>, "many">;
+    }, z.core.$strip>>;
     author_association: z.ZodString;
     auto_merge: z.ZodNullable<z.ZodBoolean>;
     draft: z.ZodBoolean;
     merged: z.ZodBoolean;
     mergeable: z.ZodBoolean;
     mergeable_state: z.ZodString;
-}, "strip", z.ZodTypeAny, {
-    number: number;
-    base: string;
-    url: string;
-    commits: {
-        sha: string;
-    }[];
-    labels: string[];
-    draft: boolean;
-    auto_merge: boolean | null;
-    author_association: string;
-    merged: boolean;
-    mergeable: boolean;
-    mergeable_state: string;
-}, {
-    number: number;
-    base: string;
-    url: string;
-    commits: {
-        sha: string;
-    }[];
-    labels: {
-        name: string;
-    }[];
-    draft: boolean;
-    auto_merge: boolean | null;
-    author_association: string;
-    merged: boolean;
-    mergeable: boolean;
-    mergeable_state: string;
-}>;
+}, z.core.$strip>;
 export type PullRequestApi = z.infer<typeof pullRequestApiSchema>;
 export declare const checkRunsSchema: z.ZodArray<z.ZodObject<{
     id: z.ZodNumber;
     name: z.ZodString;
     status: z.ZodString;
     conclusion: z.ZodNullable<z.ZodString>;
-}, "strip", z.ZodTypeAny, {
-    id: number;
-    status: string;
-    name: string;
-    conclusion: string | null;
-}, {
-    id: number;
-    status: string;
-    name: string;
-    conclusion: string | null;
-}>, "many">;
+}, z.core.$strip>>;
 export type CheckRuns = z.infer<typeof checkRunsSchema>;
 export declare const statusSchema: z.ZodObject<{
-    state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">, z.ZodLiteral<"error">]>;
+    state: z.ZodUnion<readonly [z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">, z.ZodLiteral<"error">]>;
     total_count: z.ZodNumber;
     statuses: z.ZodArray<z.ZodObject<{
-        state: z.ZodUnion<[z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">, z.ZodLiteral<"error">]>;
+        state: z.ZodUnion<readonly [z.ZodLiteral<"success">, z.ZodLiteral<"pending">, z.ZodLiteral<"failure">, z.ZodLiteral<"error">]>;
         context: z.ZodString;
         description: z.ZodNullable<z.ZodString>;
-    }, "strip", z.ZodTypeAny, {
-        state: "pending" | "failure" | "success" | "error";
-        description: string | null;
-        context: string;
-    }, {
-        state: "pending" | "failure" | "success" | "error";
-        description: string | null;
-        context: string;
-    }>, "many">;
-}, "strip", z.ZodTypeAny, {
-    state: "pending" | "failure" | "success" | "error";
-    total_count: number;
-    statuses: {
-        state: "pending" | "failure" | "success" | "error";
-        description: string | null;
-        context: string;
-    }[];
-}, {
-    state: "pending" | "failure" | "success" | "error";
-    total_count: number;
-    statuses: {
-        state: "pending" | "failure" | "success" | "error";
-        description: string | null;
-        context: string;
-    }[];
-}>;
+    }, z.core.$strip>>;
+}, z.core.$strip>;
 export type Status = z.infer<typeof statusSchema>;
 export declare const reviewsSchema: z.ZodArray<z.ZodObject<{
     id: z.ZodNumber;
     user: z.ZodObject<{
         login: z.ZodString;
         type: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
-        type: string;
-        login: string;
-    }, {
-        type: string;
-        login: string;
-    }>;
+    }, z.core.$strip>;
     body: z.ZodString;
     state: z.ZodString;
     author_association: z.ZodString;
     submitted_at: z.ZodString;
-}, "strip", z.ZodTypeAny, {
-    id: number;
-    state: string;
-    body: string;
-    author_association: string;
-    user: {
-        type: string;
-        login: string;
-    };
-    submitted_at: string;
-}, {
-    id: number;
-    state: string;
-    body: string;
-    author_association: string;
-    user: {
-        type: string;
-        login: string;
-    };
-    submitted_at: string;
-}>, "many">;
+}, z.core.$strip>>;
 export type Reviews = z.infer<typeof reviewsSchema>;
-export declare const reviewRequestsSchema: z.ZodArray<z.ZodEffects<z.ZodObject<{
+export declare const reviewRequestsSchema: z.ZodArray<z.ZodPipe<z.ZodObject<{
     login: z.ZodString;
-}, "strip", z.ZodTypeAny, {
+}, z.core.$strip>, z.ZodTransform<string, {
     login: string;
-}, {
-    login: string;
-}>, string, {
-    login: string;
-}>, "many">;
+}>>>;
 export type ReviewRequests = z.infer<typeof reviewRequestsSchema>;
