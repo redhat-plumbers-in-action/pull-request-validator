@@ -115,7 +115,7 @@ async function action(
   if (err.length > 0) {
     const result = getFailedMessage(err) + '\n\n' + getSuccessMessage(message);
 
-    if (isCiWaived) {
+    if (isCiWaived && pr.reviews.isApproved()) {
       return result;
     }
 

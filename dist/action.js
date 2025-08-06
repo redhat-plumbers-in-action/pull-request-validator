@@ -59,7 +59,7 @@ async function action(octokit, owner, repo, pr) {
     setLabels(octokit, owner, repo, pr.number, labels.add);
     if (err.length > 0) {
         const result = getFailedMessage(err) + '\n\n' + getSuccessMessage(message);
-        if (isCiWaived) {
+        if (isCiWaived && pr.reviews.isApproved()) {
             return result;
         }
         raise(result);

@@ -31618,7 +31618,7 @@ async function action(octokit, owner, repo, pr) {
     (0,util/* setLabels */.q0)(octokit, owner, repo, pr.number, labels.add);
     if (err.length > 0) {
         const result = (0,util/* getFailedMessage */.zd)(err) + '\n\n' + (0,util/* getSuccessMessage */.vD)(message);
-        if (isCiWaived) {
+        if (isCiWaived && pr.reviews.isApproved()) {
             return result;
         }
         (0,util/* raise */.xl)(result);
