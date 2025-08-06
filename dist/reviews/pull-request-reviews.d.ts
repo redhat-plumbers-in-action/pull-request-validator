@@ -9,13 +9,13 @@ export declare class PullRequestReviews {
     readonly octokit: CustomOctokit;
     reviews: Map<string, {
         id: number;
-        state: string;
-        body: string;
-        author_association: string;
         user: {
-            type: string;
             login: string;
+            type: string;
         };
+        body: string;
+        state: string;
+        author_association: string;
         submitted_at: string;
     }>;
     reviewRequests: ReviewRequests;
