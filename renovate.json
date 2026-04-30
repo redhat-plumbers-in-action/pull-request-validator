@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
+  "extends": ["config:recommended"],
 
   "labels": ["type: dependencies"],
   "github-actions": {
@@ -8,8 +8,11 @@
     "addLabels": ["github-actions"]
   },
 
-  "js": {
-    "extends": ["schedule:monthly"],
-    "addLabels": ["javascript"]
-  }
+  "packageRules": [
+    {
+      "matchCategories": ["js"],
+      "extends": ["schedule:monthly"],
+      "addLabels": ["javascript"]
+    }
+  ]
 }
