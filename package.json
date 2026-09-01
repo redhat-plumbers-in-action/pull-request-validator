@@ -26,9 +26,9 @@
   "packageManager": "yarn@4.14.1",
   "dependencies": {
     "@actions/core": "3.0.1",
-    "@octokit/core": "7.0.6",
+    "@octokit/core": "7.0.8",
     "@octokit/plugin-paginate-rest": "14.0.0",
-    "@octokit/plugin-throttling": "11.0.3",
+    "@octokit/plugin-throttling": "11.0.5",
     "@octokit/rest": "22.0.1",
     "@octokit/types": "16.0.0",
     "@probot/octokit-plugin-config": "4.1.0",
