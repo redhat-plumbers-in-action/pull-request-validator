@@ -737,12 +737,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/coverage-v8@npm:4.1.5":
-  version: 4.1.5
-  resolution: "@vitest/coverage-v8@npm:4.1.5"
+"@vitest/coverage-v8@npm:4.1.12":
+  version: 4.1.12
+  resolution: "@vitest/coverage-v8@npm:4.1.12"
   dependencies:
     "@bcoe/v8-coverage": "npm:^1.0.2"
-    "@vitest/utils": "npm:4.1.5"
+    "@vitest/utils": "npm:4.1.12"
     ast-v8-to-istanbul: "npm:^1.0.0"
     istanbul-lib-coverage: "npm:^3.2.2"
     istanbul-lib-report: "npm:^3.0.1"
@@ -752,12 +752,12 @@ __metadata:
     std-env: "npm:^4.0.0-rc.1"
     tinyrainbow: "npm:^3.1.0"
   peerDependencies:
-    "@vitest/browser": 4.1.5
-    vitest: 4.1.5
+    "@vitest/browser": 4.1.12
+    vitest: 4.1.12
   peerDependenciesMeta:
     "@vitest/browser":
       optional: true
-  checksum: 10/378e1d85a1c4670af15a18b544995a43d320460b418c188d7000f96518859e4537e00ea5e38a563c42b6183437252f0ecc92b471ede30c6d43ae87b7c8e09ed3
+  checksum: 10/04f458f2c7a223e63679db5d044d24de424d87d4c5c456956847ec2e4cccceec95aec2717bfdaaf9c5e245eddb827b32cf11acbe5ba6e119b0ab997690035459
   languageName: node
   linkType: hard
 
@@ -791,6 +791,15 @@ __metadata:
     vite:
       optional: true
   checksum: 10/949784ba08996543a313459a36a730d4b0847e42ee56cfda07a3e2add67c7adf8acbd59dcf9f75b1e4bc3fe7cc487f9f260905ff9a334866d389478112e5ae82
+  languageName: node
+  linkType: hard
+
+"@vitest/pretty-format@npm:4.1.12":
+  version: 4.1.12
+  resolution: "@vitest/pretty-format@npm:4.1.12"
+  dependencies:
+    tinyrainbow: "npm:^3.1.0"
+  checksum: 10/e1f7a74f04e6aa6afb539dc9336964447690c146c70ad830e8ed53252ffd4d952193ecf8c07ed80ed8414abbc13b34b51e4a4c2e747416a72a0f16571833f7c4
   languageName: node
   linkType: hard
 
@@ -829,6 +838,17 @@ __metadata:
   version: 4.1.5
   resolution: "@vitest/spy@npm:4.1.5"
   checksum: 10/4db4bb3aea01cd737fdb06d8f498bcd2127b8c2afeaa78ff9df4147e1474aa26dd16f42dc0512c31385824e94dbb17b17fa0f4c60b7595b7b4ab946f098220ab
+  languageName: node
+  linkType: hard
+
+"@vitest/utils@npm:4.1.12":
+  version: 4.1.12
+  resolution: "@vitest/utils@npm:4.1.12"
+  dependencies:
+    "@vitest/pretty-format": "npm:4.1.12"
+    convert-source-map: "npm:^2.0.0"
+    tinyrainbow: "npm:^3.1.0"
+  checksum: 10/60aef17e4a76fda884e13d2f354edc36221a55ded4c0c85a7b1e75c789dbbaa4114853b7045fc0894c78b2e8ce5e687b5c2c4122c91a1de47b70d2ff11045e11
   languageName: node
   linkType: hard
 
@@ -1471,7 +1491,7 @@ __metadata:
     "@probot/octokit-plugin-config": "npm:4.1.0"
     "@total-typescript/ts-reset": "npm:0.6.1"
     "@types/node": "npm:25.6.0"
-    "@vitest/coverage-v8": "npm:4.1.5"
+    "@vitest/coverage-v8": "npm:4.1.12"
     deepmerge: "npm:4.3.1"
     esbuild: "npm:^0.28.0"
     prettier: "npm:3.8.3"
